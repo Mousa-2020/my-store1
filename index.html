@@ -4,11 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>متجر موسى للإلكترونيات</title>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
-/* ================== VARIABLES ================== */
 :root{
   --primary:#1a56db;
   --accent:#10b981;
@@ -21,16 +18,10 @@
   --shadow:0 6px 20px rgba(0,0,0,.08);
 }
 
-/* ================== RESET ================== */
 *{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:system-ui,-apple-system;
-  background:var(--bg);
-  color:var(--text);
-  padding-bottom:90px;
-}
+body{font-family:system-ui;background:var(--bg);color:var(--text);padding-bottom:90px;}
 
-/* ================== HEADER ================== */
+/* Header */
 header{
   position:sticky;
   top:0;
@@ -83,7 +74,7 @@ header{
   justify-content:center;
 }
 
-/* ================== HERO ================== */
+/* Hero */
 .hero{
   background:linear-gradient(135deg,#1a56db,#1e40af);
   color:#fff;
@@ -93,7 +84,36 @@ header{
 .hero h1{font-size:1.8rem;margin-bottom:10px}
 .hero p{opacity:.9}
 
-/* ================== PRODUCTS ================== */
+/* Why Us */
+.why-us{
+  max-width:1200px;
+  margin:30px auto;
+  padding:0 16px;
+}
+.why-us h2{
+  text-align:center;
+  margin-bottom:20px;
+  color:var(--primary);
+}
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+}
+.feature{
+  background:var(--card);
+  padding:20px;
+  border-radius:var(--radius);
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.feature i{
+  color:var(--accent);
+  font-size:2rem;
+  margin-bottom:10px;
+}
+
+/* Products */
 .products{
   max-width:1200px;
   margin:auto;
@@ -107,6 +127,10 @@ header{
   border-radius:var(--radius);
   box-shadow:var(--shadow);
   overflow:hidden;
+  transition:transform 0.3s;
+}
+.product:hover{
+  transform:translateY(-5px);
 }
 .product img{
   width:100%;
@@ -126,6 +150,8 @@ header{
   font-size:.85rem;
   color:var(--muted);
   margin-bottom:10px;
+  height:40px;
+  overflow:hidden;
 }
 .price{
   font-weight:800;
@@ -141,12 +167,16 @@ header{
   color:#fff;
   font-weight:700;
   cursor:pointer;
+  transition:all 0.3s;
+}
+.product button:hover{
+  opacity:0.9;
 }
 .product button.added{
   background:var(--accent);
 }
 
-/* ================== CART FOOTER ================== */
+/* Cart Footer */
 .cart-footer{
   position:fixed;
   bottom:0;
@@ -159,6 +189,7 @@ header{
   justify-content:space-between;
   align-items:center;
   transition:.3s;
+  z-index:99;
 }
 .cart-footer.hidden{transform:translateY(100%)}
 .cart-footer strong{color:var(--primary)}
@@ -170,9 +201,13 @@ header{
   color:#fff;
   font-weight:800;
   cursor:pointer;
+  transition:all 0.3s;
+}
+.cart-footer button:hover{
+  opacity:0.9;
 }
 
-/* ================== MODAL ================== */
+/* Modal */
 .modal{
   display:none;
   position:fixed;
@@ -189,6 +224,11 @@ header{
   max-width:500px;
   border-radius:16px;
   overflow:hidden;
+  animation:slideUp 0.3s ease;
+}
+@keyframes slideUp{
+  from{transform:translateY(30px);opacity:0;}
+  to{transform:translateY(0);opacity:1;}
 }
 .modal-header{
   background:var(--primary);
@@ -196,14 +236,41 @@ header{
   padding:16px;
   display:flex;
   justify-content:space-between;
+  align-items:center;
 }
-.modal-body{padding:20px;max-height:65vh;overflow:auto}
+.modal-body{
+  padding:20px;
+  max-height:65vh;
+  overflow:auto;
+}
 .cart-item{
   display:flex;
   justify-content:space-between;
-  margin-bottom:14px;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid #eee;
 }
-.cart-item small{color:var(--muted)}
+.cart-item-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.quantity-btn{
+  width:30px;
+  height:30px;
+  border:none;
+  background:#f1f5f9;
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.remove-btn{
+  color:var(--danger);
+  cursor:pointer;
+  padding:5px;
+}
 .modal-footer{
   padding:16px;
   display:flex;
@@ -215,11 +282,31 @@ header{
   border:none;
   border-radius:10px;
   font-weight:700;
+  cursor:pointer;
 }
 .btn-secondary{background:#e5e7eb}
 .btn-success{background:var(--accent);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
 
-/* ================== FOOTER ================== */
+/* Toast */
+.toast{
+  position:fixed;
+  bottom:100px;
+  right:20px;
+  background:var(--primary);
+  color:#fff;
+  padding:12px 20px;
+  border-radius:10px;
+  display:none;
+  z-index:1001;
+  animation:slideIn 0.3s ease;
+}
+@keyframes slideIn{
+  from{transform:translateX(100%);opacity:0;}
+  to{transform:translateX(0);opacity:1;}
+}
+
+/* Footer */
 footer{
   background:#111827;
   color:#d1d5db;
@@ -251,6 +338,32 @@ footer p{margin:6px 0;font-size:.9rem}
   <p>توصيل داخل بغداد | فحص قبل الدفع | دفع عند الاستلام</p>
 </section>
 
+<section class="why-us">
+  <h2>لماذا تختار متجر موسى؟</h2>
+  <div class="features">
+    <div class="feature">
+      <i class="fas fa-shield-alt"></i>
+      <h3>منتجات أصلية</h3>
+      <p>100% منتجات أصلية مضمونة</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-search"></i>
+      <h3>فحص مجاني</h3>
+      <p>افحص المنتج قبل الدفع</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-truck"></i>
+      <h3>توصيل سريع</h3>
+      <p>توصيل خلال 24 ساعة</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-exchange-alt"></i>
+      <h3>استبدال 7 أيام</h3>
+      <p>استبدال مجاني للخلل</p>
+    </div>
+  </div>
+</section>
+
 <section class="products" id="products"></section>
 
 <div class="cart-footer" id="cartFooter">
@@ -266,11 +379,20 @@ footer p{margin:6px 0;font-size:.9rem}
       <span style="cursor:pointer" onclick="closeCart()">✕</span>
     </div>
     <div class="modal-body" id="cartItems"></div>
+    <div style="padding:0 20px;font-weight:800;font-size:1.2rem;color:var(--primary)">
+      المجموع: <span id="modalTotal">0</span> د.ع
+    </div>
     <div class="modal-footer">
-      <button class="btn-secondary" onclick="printInvoice()">طباعة فاتورة</button>
+      <button class="btn-danger" onclick="clearCart()">حذف الكل</button>
       <button class="btn-success" onclick="sendWhatsApp()">إرسال واتساب</button>
     </div>
   </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <i class="fas fa-check-circle"></i>
+  <span id="toastMessage">تمت الإضافة إلى السلة</span>
 </div>
 
 <footer>
@@ -282,29 +404,30 @@ footer p{margin:6px 0;font-size:.9rem}
 
 <script>
 const products=[
- {id:1,name:"Apple Watch 9",price:520000,img:"https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=500"},
- {id:2,name:"Galaxy Watch 6",price:285000,img:"https://images.unsplash.com/photo-1610671914904-5d97d759cd7a?w=500"},
- {id:3,name:"AirPods Pro 2",price:310000,img:"https://images.unsplash.com/photo-1600297526837-3437097a7318?w=500"},
- {id:4,name:"Power Bank Anker",price:55000,img:"https://images.unsplash.com/photo-1609592424089-9890374108e7?w=500"}
+ {id:1,name:"Apple Watch Series 9",desc:"ساعة أبل الذكية الجيل التاسع",price:520000,img:"https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=500"},
+ {id:2,name:"Galaxy Watch 6",desc:"ساعة سامسونج الذكية الجيل السادس",price:285000,img:"https://images.unsplash.com/photo-1610671914904-5d97d759cd7a?w=500"},
+ {id:3,name:"AirPods Pro 2",desc:"سماعات أبل اللاسلكية الذكية",price:310000,img:"https://images.unsplash.com/photo-1600297526837-3437097a7318?w=500"},
+ {id:4,name:"Power Bank Anker",desc:"شاحن محمول عالي السعة",price:55000,img:"https://images.unsplash.com/photo-1609592424089-9890374108e7?w=500"},
+ {id:5,name:"شاحن Apple 20W",desc:"شاحن أبل الأصلي سريع الشحن",price:35000,img:"https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500"},
+ {id:6,name:"كابل Type-C",desc:"كابل شحن وتوصيل عالي الجودة",price:15000,img:"https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=500"}
 ];
 
 let cart=JSON.parse(localStorage.getItem("cart"))||{};
 
-const productsDiv=document.getElementById("products");
-
 function renderProducts(){
+ const productsDiv=document.getElementById("products");
  productsDiv.innerHTML="";
  products.forEach(p=>{
   const inCart=cart[p.id];
   productsDiv.innerHTML+=`
    <div class="product">
-    <img src="${p.img}">
+    <img src="${p.img}" alt="${p.name}">
     <div class="product-body">
      <h3>${p.name}</h3>
-     <p>منتج أصلي مضمون</p>
+     <p>${p.desc}</p>
      <div class="price">${p.price.toLocaleString()} د.ع</div>
      <button class="${inCart?"added":""}" onclick="addToCart(${p.id})">
-      ${inCart?"تمت الإضافة":"أضف للطلب"}
+      ${inCart?"تمت الإضافة ✓":"أضف للطلب"}
      </button>
     </div>
    </div>`;
@@ -312,13 +435,18 @@ function renderProducts(){
 }
 
 function addToCart(id){
- if(!cart[id]) cart[id]={...products.find(p=>p.id===id),qty:1};
- else cart[id].qty++;
- save();
- if(Object.keys(cart).length===1) openCart();
+ const product=products.find(p=>p.id===id);
+ if(!cart[id]){
+  cart[id]={...product,qty:1};
+  showToast(`تمت إضافة ${product.name} إلى السلة`);
+ }else{
+  cart[id].qty++;
+  showToast(`تم زيادة كمية ${product.name}`);
+ }
+ saveCart();
 }
 
-function save(){
+function saveCart(){
  localStorage.setItem("cart",JSON.stringify(cart));
  updateUI();
  renderProducts();
@@ -332,23 +460,35 @@ function updateUI(){
  });
  document.getElementById("cartCount").textContent=count;
  document.getElementById("total").textContent=total.toLocaleString();
+ document.getElementById("modalTotal").textContent=total.toLocaleString();
  document.getElementById("cartFooter").style.display=count? "flex":"none";
 }
 
 function openCart(){
  const modal=document.getElementById("cartModal");
  const items=document.getElementById("cartItems");
- items.innerHTML="";
- Object.values(cart).forEach(i=>{
-  items.innerHTML+=`
-   <div class="cart-item">
-    <div>
-     <strong>${i.name}</strong>
-     <small>${i.qty} × ${i.price.toLocaleString()}</small>
-    </div>
-    <strong>${(i.qty*i.price).toLocaleString()}</strong>
-   </div>`;
- });
+ 
+ if(Object.keys(cart).length===0){
+  items.innerHTML='<p style="text-align:center;padding:40px;color:var(--muted)">السلة فارغة</p>';
+ }else{
+  items.innerHTML="";
+  Object.values(cart).forEach(i=>{
+   items.innerHTML+=`
+    <div class="cart-item">
+     <div>
+      <strong>${i.name}</strong><br>
+      <small>${i.price.toLocaleString()} د.ع للقطعة</small>
+     </div>
+     <div class="cart-item-actions">
+      <button class="quantity-btn" onclick="updateQuantity(${i.id},-1)">-</button>
+      <span style="font-weight:bold;min-width:30px;text-align:center">${i.qty}</span>
+      <button class="quantity-btn" onclick="updateQuantity(${i.id},1)">+</button>
+      <i class="fas fa-trash remove-btn" onclick="removeFromCart(${i.id})"></i>
+     </div>
+    </div>`;
+  });
+ }
+ 
  modal.style.display="flex";
 }
 
@@ -356,46 +496,96 @@ function closeCart(){
  document.getElementById("cartModal").style.display="none";
 }
 
+function updateQuantity(id,change){
+ if(cart[id]){
+  cart[id].qty+=change;
+  if(cart[id].qty<=0){
+   delete cart[id];
+   showToast("تم حذف المنتج من السلة");
+  }
+  saveCart();
+  openCart();
+ }
+}
+
+function removeFromCart(id){
+ if(cart[id]){
+  delete cart[id];
+  saveCart();
+  openCart();
+  showToast("تم حذف المنتج من السلة");
+ }
+}
+
+function clearCart(){
+ if(Object.keys(cart).length===0){
+  showToast("السلة فارغة بالفعل","warning");
+  return;
+ }
+ if(confirm("هل أنت متأكد من حذف جميع المنتجات من السلة؟")){
+  cart={};
+  saveCart();
+  closeCart();
+  showToast("تم حذف جميع المنتجات من السلة");
+ }
+}
+
 function sendWhatsApp(){
- let msg="السلام عليكم متجر موسى 👋\n\n🛒 الطلب:\n";
+ if(Object.keys(cart).length===0){
+  showToast("السلة فارغة","warning");
+  return;
+ }
+ 
+ let msg="السلام عليكم متجر موسى 👋\n\n";
+ msg+="أرغب بتأكيد طلب من داخل بغداد:\n\n";
+ msg+="🛒 المنتجات:\n";
+ 
  let total=0;
  Object.values(cart).forEach(i=>{
-  msg+=`- ${i.name} × ${i.qty}\n`;
+  msg+=`- ${i.name} (${i.qty} × ${i.price.toLocaleString()} د.ع)\n`;
   total+=i.qty*i.price;
  });
+ 
  msg+=`\n💰 المجموع: ${total.toLocaleString()} د.ع\n`;
- msg+=`💳 الدفع عند الاستلام\n📍 بغداد`;
+ msg+="\n🚚 التوصيل: داخل بغداد\n";
+ msg+="💳 الدفع: عند الاستلام\n";
+ msg+="\nشكراً لكم 🌹";
+ 
  window.open(`https://wa.me/9647717538315?text=${encodeURIComponent(msg)}`);
  cart={};
- save();
+ saveCart();
  closeCart();
+ showToast("تم إرسال الطلب بنجاح ✓","success");
 }
 
-function printInvoice(){
- let w=window.open("");
- let html="<h2>فاتورة متجر موسى</h2><hr>";
- let total=0;
- Object.values(cart).forEach(i=>{
-  html+=`<p>${i.name} × ${i.qty}</p>`;
-  total+=i.qty*i.price;
- });
- html+=`<hr><strong>المجموع: ${total.toLocaleString()} د.ع</strong>`;
- w.document.write(html);
- w.print();
- w.close();
+function showToast(message,type="success"){
+ const toast=document.getElementById("toast");
+ const toastMessage=document.getElementById("toastMessage");
+ 
+ toastMessage.textContent=message;
+ toast.style.background=type==="success"?"var(--accent)":"var(--danger)";
+ toast.style.display="flex";
+ 
+ setTimeout(()=>{
+  toast.style.display="none";
+ },3000);
 }
 
+// إخفاء السلة عند التمرير لأسفل
 let lastY=0;
 window.addEventListener("scroll",()=>{
  const f=document.getElementById("cartFooter");
- if(scrollY>lastY) f.classList.add("hidden");
- else f.classList.remove("hidden");
- lastY=scrollY;
+ if(window.scrollY>lastY){
+  f.classList.add("hidden");
+ }else{
+  f.classList.remove("hidden");
+ }
+ lastY=window.scrollY;
 });
 
+// تهيئة الصفحة
 renderProducts();
 updateUI();
 </script>
-
 </body>
 </html>
