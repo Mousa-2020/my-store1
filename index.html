@@ -1393,25 +1393,34 @@
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
-/* ===============================
-   ربط البوت مع Mousa AI Worker
-   =============================== */
-async function askMousaBot(question) {
-  const response = await fetch(
-    "https://mousa-chatbot1.mousasaleh2024.workers.dev",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message: question })
-    }
-  );
 
-  const data = await response.json();
-  return data.reply;
-}
-        // ============ مساعد موسى الذكي المتكامل ============
+        // ============ مساعد موسى الذكي المتكامل مع Cloudflare Worker ============
+        // دالة الاتصال بـ Cloudflare Worker
+        async function askMousaBot(question) {
+            try {
+                const response = await fetch(
+                    "https://mousa-chatbot1.mousasaleh2024.workers.dev",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ message: question })
+                    }
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.reply || "عذراً، لم أتلق رداً من الخادم. حاول مرة أخرى.";
+            } catch (error) {
+                console.error('Error connecting to Mousa AI:', error);
+                return "عذراً، حدث خطأ في الاتصال بالخادم. حاول مرة أخرى لاحقاً.";
+            }
+        }
+        
         let mousaAssistant = null;
         let assistantHistory = [];
         
@@ -1532,35 +1541,6 @@ async function askMousaBot(question) {
                     ],
                     note: "🔒 الدفع عند الاستلام متاح لجميع الطلبات"
                 }
-            },
-            
-            // فهم اللهجات والأخطاء الإملائية
-            dialectUnderstanding: {
-                // لهجات عراقية
-                iraqi: {
-                    words: ["شلون", "شنو", "اكدر", "هسه", "بس", "مو", "شكد", "شبيك"],
-                    meanings: ["كيف", "ماذا", "استطيع", "الآن", "فقط", "ليس", "كم", "كيف حالك"]
-                },
-                // لهجات سورية
-                syrian: {
-                    words: ["شو", "ليش", "كيفك", "ممكن", "طيب", "يعني"],
-                    meanings: ["ماذا", "لماذا", "كيف حالك", "هل يمكن", "حسناً", "أي"]
-                },
-                // لهجات خليجية
-                gulf: {
-                    words: ["وش", "لـ", "مادري", "يمكن", "عسى"],
-                    meanings: ["ماذا", "إلى", "لا أعرف", "ربما", "أتمنى"]
-                },
-                // مرادفات عامة
-                synonyms: {
-                    'ايفون': ['اي فون', 'آيفون', 'iphone', 'ابل', 'apple'],
-                    'سامسونج': ['samsung', 'جالاكسي', 'galaxy'],
-                    'بلايستيشن': ['playstation', 'بلاي ستيشن', 'ps5'],
-                    'سعر': ['كم', 'بكام', 'تكلفة', 'ثمن', 'قيمة'],
-                    'توصيل': ['شحن', 'يوصل', 'موصل', 'تسليم'],
-                    'ضمان': ['كفالة', 'استبدال', 'رجوع'],
-                    'دفع': ['كاش', 'نقد', 'فيزا', 'ماستركارد']
-                }
             }
         };
 
@@ -1579,7 +1559,7 @@ async function askMousaBot(question) {
                     const intent = this.understandIntent(cleanedMessage);
                     
                     // توليد الرد المناسب
-                    return this.generateResponse(intent, cleanedMessage, userMessage);
+                    return await this.generateResponse(intent, cleanedMessage, userMessage);
                 },
                 
                 // تطبيع الرسالة لفهم أفضل
@@ -1801,7 +1781,7 @@ async function askMousaBot(question) {
                 },
                 
                 // توليد الرد المناسب
-                generateResponse(intent, cleanedMessage, originalMessage) {
+                async generateResponse(intent, cleanedMessage, originalMessage) {
                     switch(intent) {
                         case 'greeting':
                             return this.getGreetingResponse();
@@ -1831,7 +1811,7 @@ async function askMousaBot(question) {
                             return this.getPaymentResponse();
                             
                         default:
-                            return this.getGeneralResponse(cleanedMessage, originalMessage);
+                            return await this.getGeneralResponse(cleanedMessage, originalMessage);
                     }
                 },
                 
@@ -2066,8 +2046,8 @@ async function askMousaBot(question) {
                     return `💳 **طرق الدفع المتاحة:**\n\n${payment.methods.map(method => `• ${method}`).join('\n')}\n\n${payment.note}\n\n💰 **تفاصيل الدفع:**\n\n**💵 الدفع النقدي:**\n• آمن وسريع\n• لا رسوم إضافية\n• إيصال رسمي مع كل عملية\n\n**🏦 الحوالات البنكية:**\n• اسم المستلم: ${mousaKnowledge.developer.name}\n• الرقم: ${mousaKnowledge.developer.contact.phone}\n\n**📊 نظام التقسيط:**\n• متاح على 3 أشهر\n• دفعة أولى 40%\n• فائدة 5% على المتبقي\n• شهادة دخل مطلوبة`;
                 },
                 
-                // رد عام
-                getGeneralResponse(cleanedMessage, originalMessage) {
+                // رد عام مع الاتصال بـ Cloudflare Worker
+                async getGeneralResponse(cleanedMessage, originalMessage) {
                     // محاولة فهم السؤال بشكل أفضل
                     if (cleanedMessage.includes('وش') || cleanedMessage.includes('شنو') || cleanedMessage.includes('ايه') || 
                         cleanedMessage.includes('ايش') || cleanedMessage.includes('شو') || cleanedMessage.includes('ماذا')) {
@@ -2078,17 +2058,32 @@ async function askMousaBot(question) {
                         return `🔧 **يبدو أنك تبحث عن طريقة أو إجراء.**\n\n💡 **جرب هذه الأسئلة:**\n\n• "كيف أشتري من المتجر؟"\n• "شلون اكدر اطلب منتج؟"\n• "كيف أعرف سعر المنتج؟"\n• "شلون اكدر اتواصل معكم؟"\n\n📞 **للإجراءات السريعة:** ${mousaKnowledge.developer.contact.phone}`;
                     }
                     
-                    const helpfulResponses = [
-                        `🤖 **أحتاج إلى توضيح أكثر لسؤالك.**\n\n💡 **جرب إحدى هذه الصيغ:**\n• "عندكم ايفون 15 برو؟"\n• "وش أسعار الساعات الذكية؟"\n• "وين عنوان المتجر؟"\n• "مين صاحب الموقع؟"`,
+                    // إذا كان السؤال لا يتناسب مع أي فئة، استدع Cloudflare Worker
+                    try {
+                        // إظهار رسالة الانتظار
+                        const waitMessage = "🤔 **أبحث عن أفضل إجابة لسؤالك باستخدام الذكاء الاصطناعي المتقدم...**";
                         
-                        `🔍 **لم أتمكن من فهم سؤالك بالكامل.**\n\n🎯 **مجالات استفساري:**\n• 🛍️ **المنتجات والأسعار**\n• 👨‍💻 **عن المطور والمتجر**\n• 🚚 **التوصيل والشحن**\n• 🛡️ **الضمان والاستبدال**\n• 💳 **طرق الدفع**\n\n🔍 **اختر مجالاً واكتب سؤالك:**`,
+                        // استدعاء الـ Worker للحصول على رد ذكي
+                        const aiResponse = await askMousaBot(originalMessage);
                         
-                        `🌟 **لأسئلة أكثر دقة، جرب:**\n\n1️⃣ **للمنتجات:** "عرض هواتف سامسونج" أو "أجهزة الألعاب المتاحة"\n2️⃣ **للأسعار:** "كم سعر ايفون 15 برو ماكس؟"\n3️⃣ **للتوصيل:** "هل يوصل للنجف؟ وكم المدة؟"\n4️⃣ **عن المطور:** "من هو مهندس الموقع؟"\n5️⃣ **للدعم:** "شلون اكدر اطلب؟"`,
+                        // تنسيق الرد مع إضافة معلومات المتجر
+                        return `🤖 **باستخدام الذكاء الاصطناعي المتقدم:**\n\n${aiResponse}\n\n---\n\n🏪 **تذكر في متجر موسى:**\n• جميع منتجاتنا أصلية 100%\n• فحص مجاني قبل الدفع ✓\n• ضمان سنة كاملة ✓\n• توصيل سريع داخل بغداد ✓\n• دفع عند الاستلام ✓\n\n📞 **للتواصل المباشر:** ${mousaKnowledge.developer.contact.phone}`;
+                    } catch (error) {
+                        console.error('AI Worker Error:', error);
                         
-                        `📚 **للمساعدة في صياغة سؤالك:**\n\n**بدلاً من:** "وش في عندكم؟"\n**جرب:** "عندكم هواتف ابل حديثة؟"\n\n**بدلاً من:** "شنو الأسعار؟"\n**جرب:** "كم سعر ايفون 15 وساعة أبل 9؟"\n\n**بدلاً من:** "وينكم؟"\n**جرب:** "وين عنوان المتجر في بغداد؟"`
-                    ];
-                    
-                    return helpfulResponses[Math.floor(Math.random() * helpfulResponses.length)];
+                        // رد افتراضي في حالة فشل الاتصال
+                        const helpfulResponses = [
+                            `🤖 **أحتاج إلى توضيح أكثر لسؤالك.**\n\n💡 **جرب إحدى هذه الصيغ:**\n• "عندكم ايفون 15 برو؟"\n• "وش أسعار الساعات الذكية؟"\n• "وين عنوان المتجر؟"\n• "مين صاحب الموقع؟"`,
+                            
+                            `🔍 **لم أتمكن من فهم سؤالك بالكامل.**\n\n🎯 **مجالات استفساري:**\n• 🛍️ **المنتجات والأسعار**\n• 👨‍💻 **عن المطور والمتجر**\n• 🚚 **التوصيل والشحن**\n• 🛡️ **الضمان والاستبدال**\n• 💳 **طرق الدفع**\n\n🔍 **اختر مجالاً واكتب سؤالك:**`,
+                            
+                            `🌟 **لأسئلة أكثر دقة، جرب:**\n\n1️⃣ **للمنتجات:** "عرض هواتف سامسونج" أو "أجهزة الألعاب المتاحة"\n2️⃣ **للأسعار:** "كم سعر ايفون 15 برو ماكس؟"\n3️⃣ **للتوصيل:** "هل يوصل للنجف؟ وكم المدة؟"\n4️⃣ **عن المطور:** "من هو مهندس الموقع؟"\n5️⃣ **للدعم:** "شلون اكدر اطلب؟"`,
+                            
+                            `📚 **للمساعدة في صياغة سؤالك:**\n\n**بدلاً من:** "وش في عندكم؟"\n**جرب:** "عندكم هواتف ابل حديثة؟"\n\n**بدلاً من:** "شنو الأسعار؟"\n**جرب:** "كم سعر ايفون 15 وساعة أبل 9؟"\n\n**بدلاً من:** "وينكم؟"\n**جرب:** "وين عنوان المتجر في بغداد؟"`
+                        ];
+                        
+                        return helpfulResponses[Math.floor(Math.random() * helpfulResponses.length)];
+                    }
                 }
             };
             
