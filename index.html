@@ -482,6 +482,222 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* ===== أنماط بوت "اسأل موسى" ===== */
+        #mousaBotButton {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            background: linear-gradient(135deg, #F97316, #EA580C);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(249, 115, 22, 0.3);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        #mousaBotButton:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(249, 115, 22, 0.4);
+        }
+        
+        #botChatWindow {
+            position: fixed;
+            bottom: 150px;
+            left: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 9998;
+            overflow: hidden;
+            border: 2px solid #f1f5f9;
+        }
+        
+        #botChatWindow.active {
+            display: flex;
+            animation: botSlideIn 0.3s;
+        }
+        
+        @keyframes botSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-header {
+            background: linear-gradient(135deg, #0F172A, #1E293B);
+            color: white;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .bot-avatar {
+            font-size: 28px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bot-info h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .bot-info p {
+            margin: 3px 0 0 0;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        
+        .close-bot {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: auto;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .close-bot:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .bot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+        
+        .bot-message {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #1e293b;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 8px;
+            text-align: left;
+        }
+        
+        .bot-input {
+            padding: 15px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+            background: white;
+        }
+        
+        #botInput {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        #botInput:focus {
+            border-color: #F97316;
+        }
+        
+        #sendToBot {
+            background: #F97316;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .quick-questions {
+            padding: 12px 15px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: white;
+        }
+        
+        .quick-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-btn:hover {
+            background: #F97316;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            #botChatWindow {
+                width: calc(100% - 40px);
+                height: 450px;
+                bottom: 140px;
+                left: 20px;
+                right: 20px;
+            }
+            
+            #mousaBotButton {
+                bottom: 70px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 15px;
+                padding: 10px 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #botChatWindow {
+                height: 400px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -631,50 +847,69 @@
     </footer>
 
     <script>
-        // ===== قاعدة بيانات كاملة مع أقسام جديدة =====
+        // ===== قاعدة بيانات كاملة مع 50 منتج =====
         const productsData = {
             apple: [
                 {id: 1, name: "iPhone 15 Pro Max", price: 1850000, image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&q=80"},
-                {id: 2, name: "iPhone 15", price: 1450000, image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&q=80"},
-                {id: 3, name: "Apple Watch Series 9", price: 520000, image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=300&q=80"},
-                {id: 4, name: "AirPods Pro 2", price: 310000, image: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=300&q=80"},
-                {id: 5, name: "iPad Pro 12.9", price: 1250000, image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300&q=80"},
-                {id: 6, name: "MacBook Pro 14 M3", price: 2450000, image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&q=80"},
-                {id: 7, name: "Apple Vision Pro", price: 4800000, image: "https://images.unsplash.com/photo-1700064760148-ec5b5b52f6b3?w=300&q=80"}
+                {id: 2, name: "iPhone 15 Pro", price: 1650000, image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&q=80"},
+                {id: 3, name: "iPhone 15", price: 1450000, image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&q=80"},
+                {id: 4, name: "iPhone 14 Pro", price: 1250000, image: "https://images.unsplash.com/photo-1664478546384-d57ffe74a78c?w=300&q=80"},
+                {id: 5, name: "Apple Watch Series 9", price: 520000, image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=300&q=80"},
+                {id: 6, name: "AirPods Pro 2", price: 310000, image: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=300&q=80"},
+                {id: 7, name: "iPad Pro 12.9 M2", price: 1250000, image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300&q=80"},
+                {id: 8, name: "MacBook Pro 14 M3", price: 2450000, image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&q=80"},
+                {id: 9, name: "Apple Vision Pro", price: 4800000, image: "https://images.unsplash.com/photo-1700064760148-ec5b5b52f6b3?w=300&q=80"},
+                {id: 10, name: "iMac 24 M1", price: 1850000, image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&q=80"}
             ],
             samsung: [
-                {id: 8, name: "Galaxy S24 Ultra", price: 1650000, image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&q=80"},
-                {id: 9, name: "Galaxy S24", price: 1250000, image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&q=80"},
-                {id: 10, name: "Galaxy Watch 6", price: 285000, image: "https://images.unsplash.com/photo-1610671914904-5d97d759cd7a?w=300&q=80"},
-                {id: 11, name: "Samsung Buds 2 Pro", price: 195000, image: "https://images.unsplash.com/photo-1612197527278-4caa7c35a3c4?w=300&q=80"},
-                {id: 12, name: "Galaxy Tab S9", price: 850000, image: "https://images.unsplash.com/photo-1561154463-57b5c3a38d04?w=300&q=80"},
-                {id: 13, name: "Galaxy Z Fold 5", price: 2250000, image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=300&q=80"}
+                {id: 11, name: "Galaxy S24 Ultra", price: 1650000, image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&q=80"},
+                {id: 12, name: "Galaxy S24 Plus", price: 1400000, image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&q=80"},
+                {id: 13, name: "Galaxy S24", price: 1250000, image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&q=80"},
+                {id: 14, name: "Galaxy Z Fold 5", price: 2250000, image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=300&q=80"},
+                {id: 15, name: "Galaxy Z Flip 5", price: 1450000, image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=300&q=80"},
+                {id: 16, name: "Galaxy Watch 6", price: 285000, image: "https://images.unsplash.com/photo-1610671914904-5d97d759cd7a?w=300&q=80"},
+                {id: 17, name: "Samsung Buds 2 Pro", price: 195000, image: "https://images.unsplash.com/photo-1612197527278-4caa7c35a3c4?w=300&q=80"},
+                {id: 18, name: "Galaxy Tab S9 Ultra", price: 1150000, image: "https://images.unsplash.com/photo-1561154463-57b5c3a38d04?w=300&q=80"},
+                {id: 19, name: "Galaxy Book3 Pro", price: 1850000, image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&q=80"},
+                {id: 20, name: "Samsung Monitor 32 4K", price: 650000, image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=300&q=80"}
             ],
             gaming: [
-                {id: 14, name: "PlayStation 5 Pro", price: 850000, image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=300&q=80"},
-                {id: 15, name: "Xbox Series X", price: 780000, image: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=300&q=80"},
-                {id: 16, name: "Nintendo Switch OLED", price: 650000, image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&q=80"},
-                {id: 17, name: "Gaming PC RTX 4080", price: 3800000, image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300&q=80"},
-                {id: 18, name: "Steam Deck", price: 950000, image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&q=80"}
+                {id: 21, name: "PlayStation 5 Pro", price: 850000, image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=300&q=80"},
+                {id: 22, name: "Xbox Series X", price: 780000, image: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=300&q=80"},
+                {id: 23, name: "Nintendo Switch OLED", price: 650000, image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&q=80"},
+                {id: 24, name: "Gaming PC RTX 4080", price: 3800000, image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300&q=80"},
+                {id: 25, name: "Steam Deck 512GB", price: 950000, image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&q=80"},
+                {id: 26, name: "VR Headset Meta Quest 3", price: 920000, image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&q=80"},
+                {id: 27, name: "Gaming Chair Pro", price: 320000, image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&q=80"},
+                {id: 28, name: "Gaming Mouse Logitech", price: 85000, image: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=300&q=80"},
+                {id: 29, name: "Mechanical Keyboard", price: 120000, image: "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=300&q=80"},
+                {id: 30, name: "Gaming Monitor 240Hz", price: 550000, image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=300&q=80"}
             ],
             accessories: [
-                {id: 19, name: "باور بانك Anker 20,000mAh", price: 55000, image: "https://images.unsplash.com/photo-1609592424089-9890374108e7?w=300&q=80"},
-                {id: 20, name: "كابل Type-C سريع", price: 15000, image: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&q=80"},
-                {id: 21, name: "حافظة أبل سليكون", price: 18000, image: "https://images.unsplash.com/photo-1606107099421-0b0c5e87c8f1?w=300&q=80"},
-                {id: 22, name: "Sony WH-1000XM5", price: 385000, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80"},
-                {id: 23, name: "JBL Flip 6", price: 95000, image: "https://images.unsplash.com/photo-1605464315542-bda3e2f4c6c6?w=300&q=80"}
+                {id: 31, name: "Sony WH-1000XM5", price: 385000, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80"},
+                {id: 32, name: "AirPods Max", price: 520000, image: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=300&q=80"},
+                {id: 33, name: "JBL Flip 6", price: 95000, image: "https://images.unsplash.com/photo-1605464315542-bda3e2f4c6c6?w=300&q=80"},
+                {id: 34, name: "باور بانك Anker 20,000mAh", price: 55000, image: "https://images.unsplash.com/photo-1609592424089-9890374108e7?w=300&q=80"},
+                {id: 35, name: "كابل Type-C سريع", price: 15000, image: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&q=80"},
+                {id: 36, name: "شاحن Apple 20W", price: 35000, image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80"},
+                {id: 37, name: "Samsung Wireless Pad", price: 45000, image: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=300&q=80"},
+                {id: 38, name: "حافظة أبل سليكون", price: 18000, image: "https://images.unsplash.com/photo-1606107099421-0b0c5e87c8f1?w=300&q=80"},
+                {id: 39, name: "Smart Watch Band", price: 25000, image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=300&q=80"},
+                {id: 40, name: "Bluetooth Speaker", price: 65000, image: "https://images.unsplash.com/photo-1605464315542-bda3e2f4c6c6?w=300&q=80"}
             ],
             health: [
-                {id: 24, name: "ساعة ذكية Fitbit", price: 220000, image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=300&q=80"},
-                {id: 25, name: "ميزان ذكي Xiaomi", price: 85000, image: "https://images.unsplash.com/photo-1584556810828-44f4c6d63e5f?w=300&q=80"},
-                {id: 26, name: "جهاز قياس ضغط", price: 75000, image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&q=80"},
-                {id: 27, name: "سوار لياقة Huawei", price: 95000, image: "https://images.unsplash.com/photo-1576243345690-4e4b79b63288?w=300&q=80"}
+                {id: 41, name: "ساعة ذكية Fitbit", price: 220000, image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=300&q=80"},
+                {id: 42, name: "ميزان ذكي Xiaomi", price: 85000, image: "https://images.unsplash.com/photo-1584556810828-44f4c6d63e5f?w=300&q=80"},
+                {id: 43, name: "جهاز قياس ضغط", price: 75000, image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&q=80"},
+                {id: 44, name: "سوار لياقة Huawei", price: 95000, image: "https://images.unsplash.com/photo-1576243345690-4e4b79b63288?w=300&q=80"},
+                {id: 45, name: "Smart Toothbrush", price: 65000, image: "https://images.unsplash.com/photo-1584551762978-b7e28c4dbe5d?w=300&q=80"}
             ],
             tech: [
-                {id: 28, name: "روبوت تنظيف Roomba", price: 750000, image: "https://images.unsplash.com/photo-1588702547919-26089e690ecc?w=300&q=80"},
-                {id: 29, name: "كاميرا ذكية Arlo", price: 320000, image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=300&q=80"},
-                {id: 30, name: "نظارة VR Quest 3", price: 920000, image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&q=80"},
-                {id: 31, name: "محول HDMI إلى USB-C", price: 25000, image: "https://images.unsplash.com/photo-1586816879363-db8b7b7fa8bc?w=300&q=80"}
+                {id: 46, name: "روبوت تنظيف Roomba", price: 750000, image: "https://images.unsplash.com/photo-1588702547919-26089e690ecc?w=300&q=80"},
+                {id: 47, name: "كاميرا ذكية Arlo", price: 320000, image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=300&q=80"},
+                {id: 48, name: "Smart Lock", price: 185000, image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&q=80"},
+                {id: 49, name: "محول HDMI إلى USB-C", price: 25000, image: "https://images.unsplash.com/photo-1586816879363-db8b7b7fa8bc?w=300&q=80"},
+                {id: 50, name: "Wireless Charging Pad", price: 45000, image: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=300&q=80"}
             ]
         };
 
@@ -692,6 +927,9 @@
             document.getElementById('globalSearch').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') performSearch();
             });
+            
+            // إضافة البوت بعد تحميل الصفحة
+            setTimeout(addSmartBot, 500);
         });
 
         // ===== عرض الفئات =====
@@ -970,6 +1208,277 @@
                 notification.style.opacity = '0';
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
+        }
+
+        // ===== بوت "اسأل موسى" الذكي =====
+        function addSmartBot() {
+            // إنشاء زر البوت
+            const botButton = document.createElement('button');
+            botButton.id = 'mousaBotButton';
+            botButton.innerHTML = '🤖 اسأل موسى';
+            botButton.title = 'اسأل عن المنتجات والأسعار';
+            
+            // إنشاء نافذة المحادثة
+            const chatWindow = document.createElement('div');
+            chatWindow.id = 'botChatWindow';
+            chatWindow.innerHTML = `
+                <div class="bot-header">
+                    <div class="bot-avatar">🤖</div>
+                    <div class="bot-info">
+                        <h3>اسأل موسى</h3>
+                        <p>مساعدك الذكي في المتجر</p>
+                    </div>
+                    <button class="close-bot">×</button>
+                </div>
+                <div class="bot-messages" id="botMessages">
+                    <div class="bot-message">
+                        <div class="message-content">
+                            <strong>مرحباً! 👋</strong><br>
+                            أنا مساعدك الذكي "موسى". يمكنني الإجابة عن:
+                            • أسعار المنتجات 📱
+                            • المميزات والمواصفات ⚡
+                            • التوصيل والشحن 🚚
+                            • الضمان والاستبدال 🛡️
+                            • أي استفسار آخر!
+                        </div>
+                        <div class="message-time">الآن</div>
+                    </div>
+                </div>
+                <div class="bot-input">
+                    <input type="text" id="botInput" placeholder="اسأل عن أي منتج...">
+                    <button id="sendToBot">إرسال</button>
+                </div>
+                <div class="quick-questions">
+                    <button class="quick-btn" data-q="ما سعر آيفون 15؟">سعر آيفون</button>
+                    <button class="quick-btn" data-q="مميزات سامسونج S24">مميزات سامسونج</button>
+                    <button class="quick-btn" data-q="هل يوجد توصيل؟">التوصيل</button>
+                    <button class="quick-btn" data-q="كم فترة الضمان؟">الضمان</button>
+                </div>
+            `;
+            
+            document.body.appendChild(botButton);
+            document.body.appendChild(chatWindow);
+            
+            // أحداث البوت
+            setupBotEvents();
+        }
+
+        // ===== إعداد أحداث البوت =====
+        function setupBotEvents() {
+            const botButton = document.getElementById('mousaBotButton');
+            const chatWindow = document.getElementById('botChatWindow');
+            const closeBtn = chatWindow.querySelector('.close-bot');
+            const sendBtn = document.getElementById('sendToBot');
+            const botInput = document.getElementById('botInput');
+            const quickBtns = chatWindow.querySelectorAll('.quick-btn');
+            
+            // فتح/إغلاق النافذة
+            botButton.addEventListener('click', () => {
+                chatWindow.classList.toggle('active');
+                if (chatWindow.classList.contains('active')) {
+                    botInput.focus();
+                }
+            });
+            
+            closeBtn.addEventListener('click', () => {
+                chatWindow.classList.remove('active');
+            });
+            
+            // إرسال الرسالة
+            function sendMessage() {
+                const message = botInput.value.trim();
+                if (!message) return;
+                
+                // عرض رسالة المستخدم
+                addBotMessage(message, 'user');
+                botInput.value = '';
+                
+                // الحصول على رد البوت
+                getBotResponse(message);
+            }
+            
+            sendBtn.addEventListener('click', sendMessage);
+            botInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+            
+            // الأسئلة السريعة
+            quickBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const question = btn.getAttribute('data-q');
+                    addBotMessage(question, 'user');
+                    getBotResponse(question);
+                });
+            });
+        }
+
+        // ===== إضافة رسالة للبوت =====
+        function addBotMessage(message, sender) {
+            const messagesDiv = document.getElementById('botMessages');
+            const time = new Date().toLocaleTimeString('ar-IQ', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'bot-message';
+            msgDiv.innerHTML = `
+                <div class="message-content">
+                    ${sender === 'user' ? '<strong>أنت:</strong> ' : ''}
+                    ${message}
+                </div>
+                <div class="message-time">${time}</div>
+            `;
+            
+            messagesDiv.appendChild(msgDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            // إزالة مؤشر الكتابة إن وجد
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) typingIndicator.remove();
+        }
+
+        // ===== قاعدة معرفة البوت =====
+        const BOT_KNOWLEDGE = {
+            // الأسعار
+            "سعر": {
+                "آيفون 15": "1,450,000 دينار",
+                "آيفون 15 برو": "1,650,000 دينار", 
+                "سامسونج s24": "1,250,000 دينار",
+                "ساعة أبل": "520,000 دينار",
+                "بلايستيشن 5": "850,000 دينار",
+                "أكس بوكس": "780,000 دينار",
+                "ماك بوك": "2,450,000 دينار",
+                "آيباد": "1,250,000 دينار",
+                "سماعات سوني": "385,000 دينار",
+                "روبوت تنظيف": "750,000 دينار"
+            },
+            
+            // المميزات
+            "مميزات": {
+                "آيفون 15": ["شاشة 6.7 بوصة", "كاميرا 48 ميجا", "معالج A17", "بطارية يوم كامل"],
+                "سامسونج s24": ["شاشة 120Hz", "كاميرة 200 ميجا", "قلم S-Pen", "بطارية 5000mAh"],
+                "بلايستيشن 5": ["4K جيمنق", "قرص 1TB", "جهاز تحكم DualSense", "دعم VR"],
+                "ساعة أبل": ["قياس نبض القلب", "تتبع النوم", "مقاومة للماء", "شاشة OLED"]
+            },
+            
+            // معلومات المتجر
+            "متجر": {
+                "توصيل": "🚚 التوصيل مجاني داخل بغداد خلال 24 ساعة! خارج بغداد: 2-3 أيام عمل.",
+                "ضمان": "🛡️ جميع المنتجات لها ضمان سنة + 7 أيام استبدال لأي عيب مصنعي!",
+                "دفع": "💳 نقبل: الدفع عند الاستلام • حوالة بنكية • كي نت • فيزا/ماستركارد",
+                "فحص": "🔍 فحص مجاني قبل الدفع لجميع المنتجات!",
+                "موقع": "📍 بغداد - الكرادة | 📞 0771 753 8315"
+            }
+        };
+
+        // ===== ذكاء البوت =====
+        function getBotResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // إظهار كتابة...
+            showTypingIndicator();
+            
+            // البحث عن الرد المناسب
+            setTimeout(() => {
+                let response = findBotResponse(message);
+                addBotMessage(response, 'bot');
+            }, 1000);
+        }
+
+        function showTypingIndicator() {
+            const messagesDiv = document.getElementById('botMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'bot-message';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-content">
+                    <span style="display:inline-flex; gap:3px;">
+                        <span style="animation: dot1 1s infinite">.</span>
+                        <span style="animation: dot2 1s infinite">.</span>
+                        <span style="animation: dot3 1s infinite">.</span>
+                    </span>
+                </div>
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes dot1 { 0%, 20% { opacity: 0; } 40% { opacity: 1; } }
+                @keyframes dot2 { 0%, 40% { opacity: 0; } 60% { opacity: 1; } }
+                @keyframes dot3 { 0%, 60% { opacity: 0; } 80% { opacity: 1; } }
+            `;
+            document.head.appendChild(style);
+            
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function findBotResponse(message) {
+            // البحث عن سعر
+            if (message.includes('سعر') || message.includes('كم') || message.includes('ثمن')) {
+                for (const product in BOT_KNOWLEDGE.sعر) {
+                    if (message.includes(product.toLowerCase())) {
+                        return `💰 سعر ${product} هو: ${BOT_KNOWLEDGE.sعر[product]}\n\n🔹 يمكنك إضافته للسلة مباشرة من صفحة المنتجات!`;
+                    }
+                }
+                return "من فضلك حدد المنتج الذي تريد معرفة سعره:\n• آيفون 15\n• سامسونج S24\n• ساعة أبل\n• بلايستيشن 5\n• أو اذكر المنتج المحدد";
+            }
+            
+            // البحث عن مميزات
+            if (message.includes('مميزات') || message.includes('مواصفات') || message.includes('ميزات')) {
+                for (const product in BOT_KNOWLEDGE.مميزات) {
+                    if (message.includes(product.toLowerCase())) {
+                        const features = BOT_KNOWLEDGE.مميزات[product].join('\n• ');
+                        return `⚡ مميزات ${product}:\n• ${features}\n\n🌟 منتج عالي الجودة ومضمون 100%!`;
+                    }
+                }
+                return "أي منتج تريد معرفة مميزاته؟\nمثلاً: 'مميزات آيفون 15' أو 'مواصفات سامسونج S24'";
+            }
+            
+            // معلومات المتجر
+            if (message.includes('توصيل') || message.includes('شحن') || message.includes('موصل')) {
+                return BOT_KNOWLEDGE.متجر.توصيل;
+            }
+            
+            if (message.includes('ضمان') || message.includes('استبدال') || message.includes('رجوع')) {
+                return BOT_KNOWLEDGE.متجر.ضمان;
+            }
+            
+            if (message.includes('دفع') || message.includes('دفعة') || message.includes('كريدت')) {
+                return BOT_KNOWLEDGE.متجر.دفع;
+            }
+            
+            if (message.includes('فحص') || message.includes('جودة') || message.includes('اختبار')) {
+                return BOT_KNOWLEDGE.متجر.فحص;
+            }
+            
+            if (message.includes('موقع') || message.includes('عنوان') || message.includes('اين')) {
+                return BOT_KNOWLEDGE.متجر.موقع;
+            }
+            
+            // ردود عامة
+            if (message.includes('مرحبا') || message.includes('اهلا') || message.includes('السلام')) {
+                return "أهلاً وسهلاً! 😊\nكيف يمكنني مساعدتك اليوم؟\nيمكنك سؤالي عن:\n• أسعار المنتجات\n• المميزات\n• التوصيل والشحن\n• الضمان والدفع";
+            }
+            
+            if (message.includes('شكرا') || message.includes('مشكور') || message.includes('متشكر')) {
+                return "العفو! 😇\nسعيد بخدمتك.\nهل لديك أي استفسار آخر؟";
+            }
+            
+            if (message.includes('الكل') || message.includes('كل المنتجات') || message.includes('المنتجات')) {
+                return "لدينا أكثر من 50 منتج تقني وإلكتروني:\n📱 هواتف: آيفون، سامسونج\n💻 لابتوبات: ماك بوك، ديل، اتش بي\n🎮 ألعاب: بلايستيشن، أكس بوكس\n🎧 إكسسوارات: سماعات، شواحن\n🏥 أجهزة صحية: ساعات، موازين\n🚀 تقنيات: روبوتات، كاميرات\n\nاستخدم التبويبات في الأعلى لتصفح الأقسام!";
+            }
+            
+            // الرد الافتراضي الذكي
+            const smartResponses = [
+                "هل تقصد منتج معين؟ يمكنك استخدام شريط البحث أو التبويبات للعثور على المنتجات.",
+                "يمكنني مساعدتك في العثور على المنتج المناسب! هل تبحث عن هاتف، لابتوب، أم جهاز ألعاب؟",
+                "لم أفهم سؤالك بالضبط. هل يمكنك إعادة صياغته؟\nمثلاً: 'ما سعر آيفون 15؟' أو 'هل يوجد توصيل خارج بغداد؟'",
+                "تأكد من كتابة اسم المنتج بشكل صحيح أو استخدم شريط البحث في أعلى الصفحة.",
+                "جميع منتجاتنا أصلية 100% مع فحص قبل الدفع وضمان مصنع!"
+            ];
+            
+            return smartResponses[Math.floor(Math.random() * smartResponses.length)];
         }
     </script>
 </body>
