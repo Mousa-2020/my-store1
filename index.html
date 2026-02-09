@@ -992,6 +992,7 @@
         </div>
     </footer>
 
+/*
     <!-- ============ بوت "مساعد موسى" الذكي ============ -->
     <button id="mousaAssistantButton">
         <i class="fas fa-robot"></i> مساعد موسى
@@ -2274,3 +2275,64 @@
     </script>
 </body>
 </html>
+*/
+// ===============================
+// 🤖 مساعد موسى - ChatGPT حقيقي
+// ===============================
+
+const CHATGPT_API_URL = "https://YOUR-API-ENDPOINT";
+
+let assistantHistory = [];
+
+// إرسال رسالة للمساعد
+async function assistantSendMessage() {
+    const input = document.getElementById('assistantInput');
+    const message = input.value.trim();
+    if (!message) return;
+
+    addAssistantMessage(message, 'user');
+    input.value = '';
+    input.style.height = 'auto';
+
+    showAssistantTyping();
+
+    assistantHistory.push({
+        role: "user",
+        content: message
+    });
+
+    if (assistantHistory.length > 10) {
+        assistantHistory = assistantHistory.slice(-10);
+    }
+
+    try {
+        const res = await fetch(CHATGPT_API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: message,
+                history: assistantHistory
+            })
+        });
+
+        const data = await res.json();
+        hideAssistantTyping();
+
+        const reply = data.reply || "حصل خطأ، حاول مرة ثانية.";
+        addAssistantMessage(reply, 'assistant');
+
+        assistantHistory.push({
+            role: "assistant",
+            content: reply
+        });
+
+    } catch (e) {
+        hideAssistantTyping();
+        addAssistantMessage(
+            "⚠️ تعذر الاتصال بالمساعد حالياً.\nيرجى المحاولة لاحقاً.",
+            'assistant'
+        );
+    }
+}
