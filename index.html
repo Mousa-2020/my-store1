@@ -1330,617 +1330,1104 @@
             }, 3000);
         }
 
-        // ============ بوت "اسأل موسى" الذكي المتكامل ============
-        let smartBot = null;
-        let conversationHistory = [];
+        // ============ بوت "مساعد موسى" الذكي المتكامل ============
+let mousaAssistant = null;
+let chatHistory = [];
 
-        function initializeSmartBot() {
-            // إعداد أحداث البوت
-            setupBotEvents();
+// قاعدة بيانات موسى الشخصية
+const mousaDatabase = {
+    developer: {
+        name: "المهندس موسى صالح البحر",
+        title: "مطور ومدير متجر موسى للإلكترونيات",
+        education: {
+            degree: "بكالوريوس هندسة البرمجيات",
+            university: "الجامعة التكنولوجية - العراق",
+            status: "طالب سنة ثانية"
+        },
+        skills: [
+            "تطوير مواقع وتطبيقات الويب",
+            "تصميم واجهات المستخدم UI/UX",
+            "إدارة المتاجر الإلكترونية",
+            "دعم فني وتقني"
+        ],
+        achievements: [
+            "تأسيس متجر موسى للإلكترونيات 2024",
+            "تطوير منصات تسوق إلكترونية",
+            "تقديم حلول تقنية للشركات الناشئة"
+        ],
+        contact: {
+            email: "mousasaleh2024@gmail.com",
+            phone: "0771 753 8315",
+            location: "بغداد - الكرادة"
+        },
+        philosophy: "هدفي تقديم أفضل تجربة تسوق إلكتروني مع دعم فني ممتاز وخدمة ما بعد البيع"
+    },
+    
+    store: {
+        name: "متجر موسى للإلكترونيات",
+        founded: "2024",
+        mission: "تقديم أحدث الأجهزة الإلكترونية بجودة عالية وأسعار مناسبة",
+        values: [
+            "الثقة والشفافية",
+            "جودة المنتجات",
+            "خدمة العملاء المتميزة",
+            "الدعم الفني المستمر"
+        ],
+        policies: {
+            delivery: {
+                baghdad: "مجاني خلال 24 ساعة",
+                outside: "2-3 أيام (15,000 د.ع تكلفة)",
+                nationwide: "توصيل لجميع محافظات العراق"
+            },
+            warranty: {
+                duration: "سنة كاملة",
+                return: "7 أيام استبدال",
+                conditions: "فحص مجاني قبل الدفع، فاتورة أصلية"
+            },
+            payment: [
+                "نقداً عند الاستلام",
+                "حوالة بنكية",
+                "كي نت",
+                "فيزا/ماستركارد",
+                "تقسيط على 3 أشهر"
+            ],
+            support: "دعم فني مجاني بعد البيع"
+        }
+    }
+};
+
+// قاعدة بيانات المنتجات الموسعة مع مواصفات كاملة
+const productsDatabase = {
+    apple: [
+        {
+            id: 1,
+            name: "iPhone 15 Pro Max",
+            names: ["ايفون 15 برو ماكس", "اي فون 15 برو ماكس", "آيفون 15 برو ماكس", "iphone 15 pro max"],
+            price: 1850000,
+            image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&q=80",
+            specs: {
+                display: "شاشة 6.7 بوصة Super Retina XDR",
+                processor: "معالج A17 Pro",
+                camera: "نظام كاميرا ثلاثية 48 ميجابكسل",
+                battery: "بطارية 4422 مللي أمبير",
+                storage: "التخزين: 256GB / 512GB / 1TB",
+                features: ["مقاومة الماء IP68", "تصميم تيتانيوم", "iOS 17", "شريحة 5G"]
+            },
+            description: "أقوى هاتف آيفون مع أداء خرافي وكاميرات محترفة للتصوير الاحترافي",
+            advantages: [
+                "أفضل كاميرا في هاتف ذكي",
+                "أداء الألعاب الاحترافية",
+                "تصميم تيتانيوم فاخر",
+                "شاشة سوبر ريتينا مذهلة"
+            ]
+        },
+        {
+            id: 2,
+            name: "iPhone 15 Pro",
+            names: ["ايفون 15 برو", "اي فون 15 برو", "آيفون 15 برو", "iphone 15 pro"],
+            price: 1650000,
+            image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&q=80",
+            specs: {
+                display: "شاشة 6.1 بوصة Super Retina XDR",
+                processor: "معالج A17 Pro",
+                camera: "كاميرا ثلاثية 48+12+12 ميجابكسل",
+                battery: "بطارية 3650 مللي أمبير",
+                storage: "التخزين: 128GB / 256GB / 512GB / 1TB",
+                features: ["مقاومة الماء IP68", "تصميم تيتانيوم", "iOS 17", "شريحة 5G"]
+            },
+            description: "تصميم تيتانيوم أنيق مع أداء قوي وكاميرات متميزة",
+            advantages: [
+                "تصميم تيتانيوم خفيف الوزن",
+                "أداء سريع وسلس",
+                "كاميرات احترافية",
+                "تجربة iOS المتميزة"
+            ]
+        },
+        {
+            id: 3,
+            name: "iPhone 15",
+            names: ["ايفون 15", "اي فون 15", "آيفون 15", "iphone 15", "ايفون ١٥", "اي فون ١٥"],
+            price: 1450000,
+            image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&q=80",
+            specs: {
+                display: "شاشة 6.1 بوصة Super Retina XDR",
+                processor: "معالج A16 Bionic",
+                camera: "كاميرا مزدوجة 48+12 ميجابكسل",
+                battery: "بطارية 3349 مللي أمبير",
+                storage: "التخزين: 128GB / 256GB / 512GB",
+                features: ["مقاومة الماء IP68", "تصميم ألومنيوم", "iOS 17", "شريحة 5G"]
+            },
+            description: "هاتف آيفون المثالي للأداء المتميز بتكلفة معقولة",
+            advantages: [
+                "كاميرا 48 ميجابكسل رئيسية",
+                "شاشة سوبر ريتينا",
+                "تصميم خفيف ومتين",
+                "سعر مناسب للأداء المتميز"
+            ]
+        },
+        {
+            id: 4,
+            name: "Apple Watch Series 9",
+            names: ["ساعة ابل 9", "ساعة أبل 9", "ابل واتش 9", "apple watch 9", "ساعة ابل سيريس 9"],
+            price: 520000,
+            image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=300&q=80",
+            specs: {
+                display: "شاشة Retina دائري",
+                processor: "معالج S9",
+                battery: "بطارية 18 ساعة",
+                features: ["GPS", "مقاومة الماء 50م", "قياس الأكسجين في الدم", "تتبع النوم"]
+            },
+            description: "ساعة ذكية متطورة مع تتبع صحي دقيق وتكامل ممتاز مع آيفون",
+            advantages: [
+                "تتبع صحي متكامل",
+                "تكامل ممتاز مع أجهزة أبل",
+                "تصميم أنيق ومقاوم للماء",
+                "بطارية يوم كامل"
+            ]
+        },
+        {
+            id: 5,
+            name: "AirPods Pro 2",
+            names: ["ايربودز برو 2", "ايربود برو 2", "سماعات ابل برو", "airpods pro 2", "سماعات ابل لا سلكية"],
+            price: 310000,
+            image: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=300&q=80",
+            specs: {
+                battery: "6 ساعات مع الشحن السريع",
+                features: ["إلغاء ضوضاء نشط", "وضع شفافية", "مقاومة العرق والماء", "شحن لاسلكي"]
+            },
+            description: "سماعات لاسلكية مع إلغاء ضوضاء متطور وجودة صوت استثنائية",
+            advantages: [
+                "إلغاء ضوضاء متطور",
+                "جودة صوت مذهلة",
+                "راحة في الاستخدام",
+                "تكامل سلس مع أجهزة أبل"
+            ]
+        }
+    ],
+    
+    samsung: [
+        {
+            id: 11,
+            name: "Galaxy S24 Ultra",
+            names: ["سامسونج s24 الترا", "جالاكسي s24 الترا", "samsung s24 ultra", "سامسونج اس 24 الترا"],
+            price: 1650000,
+            image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&q=80",
+            specs: {
+                display: "شاشة 6.8 بوصة Dynamic AMOLED 2X",
+                processor: "Snapdragon 8 Gen 3",
+                camera: "كاميرا 200 ميجابكسل مع zoom 100x",
+                battery: "5000 مللي أمبير",
+                features: ["قلم S-Pen", "مقاومة الماء IP68", "One UI 6.1", "شحن سريع 45W"]
+            },
+            description: "هاتف سامسونج الأقوى مع قلم S-Pen وكاميرات احترافية",
+            advantages: [
+                "كاميرا 200 ميجابكسل",
+                "قلم S-Pen المدمج",
+                "أداء الألعاب القوي",
+                "بطارية طويلة الأمد"
+            ]
+        },
+        {
+            id: 12,
+            name: "Galaxy S24",
+            names: ["سامسونج s24", "جالاكسي s24", "samsung s24", "سامسونج اس 24", "سامسونج اس٢٤", "سامسونج اس٢٤"],
+            price: 1250000,
+            image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&q=80",
+            specs: {
+                display: "شاشة 6.2 بوصة Dynamic AMOLED 2X",
+                processor: "Exynos 2400 / Snapdragon 8 Gen 3",
+                camera: "كاميرا ثلاثية 50+12+10 ميجابكسل",
+                battery: "4000 مللي أمبير",
+                features: ["مقاومة الماء IP68", "One UI 6.1", "شحن سريع 25W"]
+            },
+            description: "هاتف سامسونج المميز بأداء قوي وكاميرات متميزة",
+            advantages: [
+                "تصميم أنيق وخفيف",
+                "شاشة ديناميك مذهلة",
+                "كاميرات متطورة",
+                "أداء سلس"
+            ]
+        },
+        {
+            id: 13,
+            name: "Galaxy Z Fold 5",
+            names: ["سامسونج زد فولد 5", "جالاكسي زد فولد 5", "samsung z fold 5", "سامسونج فولد"],
+            price: 2250000,
+            image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=300&q=80",
+            specs: {
+                display: "شاشة قابلة للطي 7.6 بوصة",
+                processor: "Snapdragon 8 Gen 2",
+                camera: "كاميرا ثلاثية 50+12+12 ميجابكسل",
+                battery: "4400 مللي أمبير",
+                features: ["شاشة قابلة للطي", "مقاومة الماء IPX8", "قلم S-Pen", "شحن سريع 25W"]
+            },
+            description: "هاتف قابلة للطي مع شاشة كبيرة وأداء قوي",
+            advantages: [
+                "شاشة كبيرة قابلة للطي",
+                "متعدد المهام المتقدم",
+                "تصميم مبتكر",
+                "أداء قوي"
+            ]
+        }
+    ],
+    
+    gaming: [
+        {
+            id: 21,
+            name: "PlayStation 5",
+            names: ["بلايستيشن 5", "بلاي ستيشن 5", "playstation 5", "بلايستيشن ٥", "ps5"],
+            price: 850000,
+            image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=300&q=80",
+            specs: {
+                processor: "AMD Zen 2 CPU",
+                graphics: "AMD RDNA 2 GPU",
+                storage: "SSD 825GB",
+                features: ["دعم 4K 120fps", "دعم Ray Tracing", "جهاز DualSense", "توافق مع PS4"]
+            },
+            description: "أقوى جهاز ألعاب من سوني مع أداء 4K وتجربة غامرة",
+            advantages: [
+                "أداء 4K مذهل",
+                "ألعاب حصرية متميزة",
+                "جهاز DualSense المتطور",
+                "سرعة تحميل فائقة"
+            ]
+        },
+        {
+            id: 22,
+            name: "Xbox Series X",
+            names: ["اكس بوكس سيريس اكس", "اكس بوكس اكس", "xbox series x", "اكس بوكس", "xbox"],
+            price: 780000,
+            image: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=300&q=80",
+            specs: {
+                processor: "AMD Zen 2 CPU",
+                graphics: "AMD RDNA 2 GPU",
+                storage: "SSD 1TB",
+                features: ["دعم 4K 120fps", "Game Pass", "Quick Resume", "توافق مع Xbox One"]
+            },
+            description: "جهاز ألعاب قوي مع خدمة Game Pass ومكتبة ألعاب ضخمة",
+            advantages: [
+                "خدمة Game Pass المتميزة",
+                "أداء 4K قوي",
+                "مكتبة ألعاب ضخمة",
+                "دعم ألعاب Xbox القديمة"
+            ]
+        }
+    ],
+    
+    accessories: [
+        {
+            id: 31,
+            name: "Sony WH-1000XM5",
+            names: ["سوني wh1000xm5", "سماعات سوني", "sony wh-1000xm5", "سماعات سوني لاسلكية"],
+            price: 385000,
+            image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80",
+            specs: {
+                battery: "30 ساعة مع إلغاء الضوضاء",
+                features: ["إلغاء ضوضاء رقمي", "ميكروفونات متعددة", "تحكم باللمس", "شحن سريع"]
+            },
+            description: "سماعات لاسلكية مع أفضل تقنية إلغاء ضوضاء في السوق",
+            advantages: [
+                "أفضل إلغاء ضوضاء",
+                "جودة صوت استثنائية",
+                "راحة فائقة",
+                "بطارية طويلة الأمد"
+            ]
+        }
+    ]
+};
+
+function initializeSmartBot() {
+    setupBotEvents();
+    
+    mousaAssistant = {
+        // قاعدة معرفة موسعة
+        knowledgeBase: {
+            developer: mousaDatabase.developer,
+            store: mousaDatabase.store,
+            products: productsDatabase,
             
-            // إنشاء البوت الذكي
-            smartBot = {
-                // معلومات موسى الشخصية
-                mousaProfile: {
-                    name: "موسى صالح البحر",
-                    age: 21,
-                    nationality: "يمني",
-                    residence: "بغداد، العراق",
-                    education: {
-                        university: "الجامعة التكنولوجية",
-                        major: "هندسة البرمجيات",
-                        year: "الثانية"
-                    },
-                    store: {
-                        name: "متجر موسى للإلكترونيات",
-                        location: "بغداد - الكرادة",
-                        phone: "0771 753 8315"
-                    }
-                },
+            // فهم اللهجات والأخطاء
+            dialectMap: {
+                // لهجات عراقية
+                'شلون': 'كيف', 'شنو': 'ماذا', 'اكدر': 'استطيع', 'هسه': 'الآن',
+                'بس': 'فقط', 'مو': 'ليس', 'شكد': 'كم', 'شبيك': 'كيف حالك',
                 
-                // معالجة الرسالة
-                async processMessage(userMessage) {
-                    const message = userMessage.toLowerCase();
-                    
-                    // تنظيف الرسالة
-                    const cleaned = this.cleanMessage(message);
-                    
-                    // تحليل النية
-                    const intent = this.analyzeIntent(cleaned);
-                    
-                    // الحصول على الرد
-                    return this.generateResponse(intent, cleaned);
-                },
+                // لهجات سورية
+                'شو': 'ماذا', 'ليش': 'لماذا', 'كيفك': 'كيف حالك',
+                'ممكن': 'هل يمكن', 'طيب': 'حسناً', 'يعني': 'أي',
                 
-                // تنظيف الرسالة
-                cleanMessage(text) {
-                    // إزالة الرموز الغريبة والحفاظ على العربية
-                    return text.replace(/[^\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\s\d\.\?\!,]/g, '')
-                               .replace(/\s+/g, ' ')
-                               .trim();
-                },
+                // لهجات خليجية
+                'وش': 'ماذا', 'لـ': 'إلى', 'مادري': 'لا أعرف',
+                'يمكن': 'ربما', 'عسى': 'أتمنى',
                 
-                // تحليل نية الرسالة
-                analyzeIntent(message) {
-                    // التحية
-                    if (this.isGreeting(message)) return 'greeting';
-                    
-                    // الوداع
-                    if (this.isFarewell(message)) return 'farewell';
-                    
-                    // موسى الشخصية
-                    if (message.includes('موسى') || message.includes('صاحب') || message.includes('مين') || 
-                        message.includes('من هو') || message.includes('شخص')) {
-                        return 'about_mousa';
-                    }
-                    
-                    // معلومات موسى التفصيلية
-                    if (message.includes('عمر') || message.includes('كم سنه') || message.includes('مواليد')) {
-                        return 'mousa_age';
-                    }
-                    
-                    if (message.includes('دراس') || message.includes('جامع') || message.includes('تخص') || 
-                        message.includes('تدرس') || message.includes('شغلك')) {
-                        return 'mousa_education';
-                    }
-                    
-                    if (message.includes('وين') || message.includes('مكان') || message.includes('سكن') || 
-                        message.includes('عنوان') || message.includes('تسكن')) {
-                        return 'mousa_location';
-                    }
-                    
-                    if (message.includes('يمن') || message.includes('جنسي') || message.includes('اصلي') || 
-                        message.includes('بلدك') || message.includes('منين')) {
-                        return 'mousa_nationality';
-                    }
-                    
-                    // الأسعار
-                    if (message.includes('سعر') || message.includes('كم') || message.includes('ثمن') || 
-                        message.includes('بكام') || message.includes('بكم') || message.includes('تكلفة')) {
-                        return 'price_inquiry';
-                    }
-                    
-                    // المنتجات
-                    if (message.includes('منتج') || message.includes('سلعة') || message.includes('بضاعة') || 
-                        message.includes('جهاز') || message.includes('ايه المنتجات') || message.includes('وش عندك')) {
-                        return 'products_list';
-                    }
-                    
-                    // منتج محدد
-                    if (message.includes('ايفون') || message.includes('iphone') || message.includes('ابل') || 
-                        message.includes('apple') || message.includes('اي فون')) {
-                        return 'apple_products';
-                    }
-                    
-                    if (message.includes('سامسونج') || message.includes('samsung') || message.includes('جالاكسي') || 
-                        message.includes('galaxy') || message.includes('سوني')) {
-                        return 'samsung_products';
-                    }
-                    
-                    if (message.includes('بلايستيشن') || message.includes('playstation') || message.includes('بلاي') || 
-                        message.includes('العاب') || message.includes('جيم') || message.includes('اكس بوكس')) {
-                        return 'gaming_products';
-                    }
-                    
-                    if (message.includes('سماع') || message.includes('هيدفون') || message.includes('ايربود') || 
-                        message.includes('airpod') || message.includes('سماعة')) {
-                        return 'accessories_products';
-                    }
-                    
-                    if (message.includes('ساع') || message.includes('watch') || message.includes('ساعات')) {
-                        return 'watches_products';
-                    }
-                    
-                    if (message.includes('لابتوب') || message.includes('كمبيوتر') || message.includes('لاب') || 
-                        message.includes('كمبيوتر') || message.includes('ماك بوك')) {
-                        return 'laptops_products';
-                    }
-                    
-                    // معلومات المتجر
-                    if (message.includes('توصيل') || message.includes('شحن') || message.includes('يوصل') || 
-                        message.includes('موصل') || message.includes('شحنة')) {
-                        return 'delivery_info';
-                    }
-                    
-                    if (message.includes('ضمان') || message.includes('استبدال') || message.includes('رجوع') || 
-                        message.includes('يرجع') || message.includes('يسترجع')) {
-                        return 'warranty_info';
-                    }
-                    
-                    if (message.includes('دفع') || message.includes('دفعة') || message.includes('كاش') || 
-                        message.includes('نقد') || message.includes('كريدت') || message.includes('فيزا')) {
-                        return 'payment_info';
-                    }
-                    
-                    if (message.includes('متجر') || message.includes('محل') || message.includes('دكان') || 
-                        message.includes('المحل') || message.includes('المتجر')) {
-                        return 'store_info';
-                    }
-                    
-                    if (message.includes('ساعات') || message.includes('فتح') || message.includes('اغلاق') || 
-                        message.includes('يفتح') || message.includes('يغلق') || message.includes('وقت')) {
-                        return 'working_hours';
-                    }
-                    
-                    // البحث عن منتج معين
-                    const productMatch = this.findProductInMessage(message);
-                    if (productMatch) return 'specific_product';
-                    
-                    // إذا لم يتم التعرف
-                    return 'general_inquiry';
-                },
+                // لهجات مصرية
+                'ايه': 'ماذا', 'ازاي': 'كيف', 'عاوز': 'أريد',
+                'بقى': 'حسناً', 'طب': 'حسناً',
                 
-                // البحث عن منتج في الرسالة
-                findProductInMessage(message) {
-                    // جميع المنتجات
-                    const allProducts = [];
-                    for (const cat in productsData) {
-                        allProducts.push(...productsData[cat]);
+                // لهجات يمنية
+                'اش': 'ماذا', 'كيف': 'كيف', 'شبيس': 'كيف حالك',
+                'طيب': 'حسناً', 'يا': 'يا'
+            },
+            
+            // مرادفات للبحث الذكي
+            synonyms: {
+                'ايفون': ['اي فون', 'آيفون', 'iphone', 'ابل', 'apple'],
+                'سامسونج': ['samsung', 'جالاكسي', 'galaxy', 'سوني'],
+                'بلايستيشن': ['playstation', 'بلاي ستيشن', 'ps5', 'ps4'],
+                'اكس بوكس': ['xbox', 'xbox series', 'اكس بوكس سيريس'],
+                'سعر': ['كم', 'بكام', 'تكلفة', 'ثمن', 'قيمة'],
+                'توصيل': ['شحن', 'يوصل', 'موصل', 'تسليم'],
+                'ضمان': ['كفالة', 'استبدال', 'رجوع', 'يرجع'],
+                'دفع': ['كاش', 'نقد', 'فيزا', 'ماستركارد', 'بطاقة']
+            }
+        },
+
+        // معالجة رسالة المستخدم بذكاء
+        async processMessage(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // 1. تنظيف وتحليل الرسالة
+            const cleanedMessage = this.cleanAndNormalize(message);
+            
+            // 2. فهم النية والموضوع
+            const analysis = this.analyzeMessage(cleanedMessage);
+            
+            // 3. توليد الرد الذكي
+            const response = await this.generateSmartResponse(analysis, cleanedMessage);
+            
+            return response;
+        },
+
+        // تنظيف وتطبيع الرسالة
+        cleanAndNormalize(text) {
+            // تحويل الأرقام العربية إلى إنجليزية للبحث
+            text = text.replace(/[٠١٢٣٤٥٦٧٨٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+            
+            // إزالة علامات الترقيم والرموز غير العربية
+            text = text.replace(/[^\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\s\d]/g, ' ');
+            
+            // تقليل المسافات المتعددة
+            text = text.replace(/\s+/g, ' ').trim();
+            
+            return text;
+        },
+
+        // تحليل عميق للرسالة
+        analyzeMessage(message) {
+            const analysis = {
+                intent: 'general',
+                topic: '',
+                product: null,
+                detail: '',
+                urgency: 'normal'
+            };
+            
+            // تحليل اللهجة وفهم المعنى الحقيقي
+            const normalizedMessage = this.normalizeDialect(message);
+            
+            // البحث الذكي في المرادفات
+            const enrichedMessage = this.enrichWithSynonyms(normalizedMessage);
+            
+            // تحديد النية الرئيسية
+            if (this.isGreeting(enrichedMessage)) {
+                analysis.intent = 'greeting';
+            } else if (this.isFarewell(enrichedMessage)) {
+                analysis.intent = 'farewell';
+            } else if (this.isAboutDeveloper(enrichedMessage)) {
+                analysis.intent = 'about_developer';
+                analysis.topic = this.extractDeveloperTopic(enrichedMessage);
+            } else if (this.isProductInquiry(enrichedMessage)) {
+                analysis.intent = 'product_inquiry';
+                analysis.product = this.findProductSmart(enrichedMessage);
+                analysis.detail = this.extractProductDetail(enrichedMessage);
+            } else if (this.isPriceQuestion(enrichedMessage)) {
+                analysis.intent = 'price_inquiry';
+                analysis.product = this.findProductSmart(enrichedMessage);
+            } else if (this.isStoreQuestion(enrichedMessage)) {
+                analysis.intent = 'store_info';
+                analysis.topic = this.extractStoreTopic(enrichedMessage);
+            } else if (this.isDeliveryQuestion(enrichedMessage)) {
+                analysis.intent = 'delivery_info';
+            } else if (this.isWarrantyQuestion(enrichedMessage)) {
+                analysis.intent = 'warranty_info';
+            } else if (this.isPaymentQuestion(enrichedMessage)) {
+                analysis.intent = 'payment_info';
+            } else {
+                // محاولة فهم النية العامة
+                analysis.intent = 'general_inquiry';
+                analysis.topic = this.guessTopic(enrichedMessage);
+            }
+            
+            // تحديد مستوى الاستعجال
+            if (enrichedMessage.includes('ضروري') || enrichedMessage.includes('عاجل') || 
+                enrichedMessage.includes('سريع') || enrichedMessage.includes('الآن')) {
+                analysis.urgency = 'high';
+            }
+            
+            return analysis;
+        },
+
+        // تطبيع اللهجات
+        normalizeDialect(message) {
+            let normalized = message;
+            const dialectMap = this.knowledgeBase.dialectMap;
+            
+            for (const [dialectWord, standardWord] of Object.entries(dialectMap)) {
+                const regex = new RegExp(`\\b${dialectWord}\\b`, 'gi');
+                normalized = normalized.replace(regex, standardWord);
+            }
+            
+            return normalized;
+        },
+
+        // إثراء بالمرادفات
+        enrichWithSynonyms(message) {
+            let enriched = message;
+            const synonyms = this.knowledgeBase.synonyms;
+            
+            for (const [word, synonymList] of Object.entries(synonyms)) {
+                for (const synonym of synonymList) {
+                    const regex = new RegExp(`\\b${synonym}\\b`, 'gi');
+                    if (regex.test(enriched) && !enriched.includes(word)) {
+                        enriched += ' ' + word;
+                    }
+                }
+            }
+            
+            return enriched;
+        },
+
+        // البحث الذكي عن المنتج
+        findProductSmart(message) {
+            // 1. البحث في جميع الأسماء والمرادفات
+            for (const category in productsDatabase) {
+                for (const product of productsDatabase[category]) {
+                    // البحث في الأسماء الرسمية
+                    if (product.name.toLowerCase().includes(message) || 
+                        message.includes(product.name.toLowerCase())) {
+                        return product;
                     }
                     
-                    // البحث عن أي منتج مذكور
-                    for (const product of allProducts) {
-                        const productName = product.name.toLowerCase();
-                        if (message.includes(productName) || 
-                            productName.split(' ').some(word => message.includes(word))) {
-                            return product;
+                    // البحث في أسماء بديلة
+                    if (product.names) {
+                        for (const altName of product.names) {
+                            if (message.includes(altName.toLowerCase()) || 
+                                altName.toLowerCase().includes(message)) {
+                                return product;
+                            }
                         }
                     }
                     
                     // البحث بكلمات مفتاحية
-                    const keywords = {
-                        'ايفون 15': productsData.apple[2],
-                        'ايفون 15 برو': productsData.apple[1],
-                        'سامسونج s24': productsData.samsung[2],
-                        'بلايستيشن 5': productsData.gaming[0],
-                        'ساعة ابل': productsData.apple[4],
-                        'ماك بوك': productsData.apple[7]
-                    };
+                    const searchWords = message.split(' ');
+                    const productWords = product.name.toLowerCase().split(' ');
                     
-                    for (const [keyword, product] of Object.entries(keywords)) {
-                        if (message.includes(keyword)) {
-                            return product;
+                    let matchScore = 0;
+                    for (const word of searchWords) {
+                        if (productWords.some(pw => pw.includes(word) || word.includes(pw))) {
+                            matchScore++;
                         }
                     }
                     
-                    return null;
-                },
+                    if (matchScore >= 2) {
+                        return product;
+                    }
+                }
+            }
+            
+            // 2. البحث بالتصحيح التلقائي
+            return this.findProductWithAutocorrect(message);
+        },
+
+        // تصحيح تلقائي للبحث
+        findProductWithAutocorrect(message) {
+            const allProducts = [];
+            for (const category in productsDatabase) {
+                allProducts.push(...productsDatabase[category]);
+            }
+            
+            // قائمة المنتجات للبحث المقارب
+            const searchTerms = message.split(' ');
+            let bestMatch = null;
+            let bestScore = 0;
+            
+            for (const product of allProducts) {
+                let score = 0;
+                const productSearchString = (product.name + ' ' + (product.names || []).join(' ')).toLowerCase();
                 
-                // توليد الرد
-                generateResponse(intent, originalMessage) {
-                    switch(intent) {
-                        case 'greeting':
-                            return this.getGreetingResponse();
-                            
-                        case 'farewell':
-                            return this.getFarewellResponse();
-                            
-                        case 'about_mousa':
-                            return this.getMousaInfo();
-                            
-                        case 'mousa_age':
-                            return `عمري ${this.mousaProfile.age} سنة 🎂\n\n${this.getMousaInfo()}`;
-                            
-                        case 'mousa_education':
-                            return `أدرس **${this.mousaProfile.education.major}** في **${this.mousaProfile.education.university}** - سنة **${this.mousaProfile.education.year}** 🎓\n\n${this.getMousaInfo()}`;
-                            
-                        case 'mousa_location':
-                            return `أسكن في **${this.mousaProfile.residence}** 🏠\nالمتجر في **${this.mousaProfile.store.location}**\n\n${this.getMousaInfo()}`;
-                            
-                        case 'mousa_nationality':
-                            return `أنا **${this.mousaProfile.nationality}** وأسكن في **${this.mousaProfile.residence}** 🌍\n\n${this.getMousaInfo()}`;
-                            
-                        case 'price_inquiry':
-                            return this.getPriceResponse(originalMessage);
-                            
-                        case 'products_list':
-                            return this.getAllProducts();
-                            
-                        case 'apple_products':
-                            return this.getAppleProducts();
-                            
-                        case 'samsung_products':
-                            return this.getSamsungProducts();
-                            
-                        case 'gaming_products':
-                            return this.getGamingProducts();
-                            
-                        case 'accessories_products':
-                            return this.getAccessoriesProducts();
-                            
-                        case 'watches_products':
-                            return this.getWatchesProducts();
-                            
-                        case 'laptops_products':
-                            return this.getLaptopsProducts();
-                            
-                        case 'specific_product':
-                            const product = this.findProductInMessage(originalMessage);
-                            if (product) {
-                                return `📱 **${product.name}**\n💰 السعر: ${product.price.toLocaleString()} دينار عراقي\n\n🔹 يمكنك إضافته للسلة مباشرة من الموقع!\n🔹 فحص مجاني قبل الدفع\n🔹 ضمان سنة كاملة`;
+                for (const term of searchTerms) {
+                    if (term.length < 3) continue;
+                    
+                    // البحث بالتشابه
+                    if (productSearchString.includes(term)) {
+                        score += 3;
+                    } else {
+                        // البحث بالتشابه الجزئي
+                        for (const productWord of productSearchString.split(' ')) {
+                            if (this.calculateSimilarity(term, productWord) > 0.7) {
+                                score += 2;
                             }
-                            return this.getAllProducts();
-                            
-                        case 'delivery_info':
-                            return `🚚 **معلومات التوصيل:**\n\n• داخل بغداد: 🆓 مجاني خلال 24 ساعة\n• خارج بغداد: ⏳ 2-3 أيام عمل (15,000 د.ع تكلفة إضافية)\n• المناطق النائية: حسب المسافة\n\n📦 **التغليف:** جميع الطلبات مغلفة بشكل آمن وفاخر`;
-                            
-                        case 'warranty_info':
-                            return `🛡️ **سياسة الضمان:**\n\n✅ مدة الضمان: سنة كاملة\n🔄 الاستبدال: 7 أيام لأي عيب مصنعي\n📋 الشروط: فحص مجاني قبل الدفع، فاتورة أصلية\n\n🔧 **ما يشمله:** أعطال المصنع، عيوب التصنيع، مشاكل البطارية (خلال 6 أشهر)`;
-                            
-                        case 'payment_info':
-                            return `💳 **طرق الدفع:**\n\n• 💵 نقداً عند الاستلام\n• 🏦 حوالة بنكية\n• 💳 كي نت\n• 🌐 فيزا/ماستركارد\n• 📊 تقسيط على 3 أشهر (بفائدة 5%)\n\n🔒 **ضمانات الدفع:** الدفع عند الاستلام متاح لجميع الطلبات`;
-                            
-                        case 'store_info':
-                            return `🏪 **${this.mousaProfile.store.name}**\n\n📍 العنوان: ${this.mousaProfile.store.location}\n📞 الهاتف: ${this.mousaProfile.store.phone}\n📧 البريد: mousasaleh2024@gmail.com\n\n⭐ **مميزات المتجر:**\n✓ فحص مجاني قبل الدفع\n✓ جميع المنتجات أصلية 100%\n✓ دعم فني بعد البيع\n✓ تغليف هدايا مجاني`;
-                            
-                        case 'working_hours':
-                            return `🕐 **أوقات العمل:**\n\n• يومياً: 9:00 صباحاً - 10:00 مساءً\n• الجمعة: 2:00 ظهراً - 10:00 مساءً\n• العطل: العطل الرسمية فقط\n\n📞 **للطلبات خارج أوقات العمل:** يمكنك الطلب عبر الموقع على مدار 24 ساعة!`;
-                            
-                        default:
-                            return this.getGeneralResponse(originalMessage);
+                        }
                     }
-                },
-                
-                // الرد على التحية
-                getGreetingResponse() {
-                    const greetings = [
-                        "مرحباً بك! 👋 أنا مساعد موسى الذكي. كيف يمكنني خدمتك اليوم؟",
-                        "أهلاً وسهلاً! 😊 أنا هنا لأجيب على جميع استفساراتك عن المتجر والمنتجات.",
-                        "مساء الخير! 🌙 أنا بوت ذكي بمثابة المساعد الشخصي لمتجر موسى. تفضل بسؤالك!",
-                        "أهلين! 🤗 موسى جالس معاي بالبوت عشان يخدمك. شنو تحتاج؟"
-                    ];
-                    return greetings[Math.floor(Math.random() * greetings.length)];
-                },
-                
-                // الرد على الوداع
-                getFarewellResponse() {
-                    const farewells = [
-                        "أتمنى أكون قدرت أخدمك! إذا عندك أي سؤال ثاني، أنا موجود دائماً. 🙏",
-                        "شكراً لك! بالتوفيق في اختيارك، ونتشرف بخدمتك مرة ثانية. ✨",
-                        "لا تتردد ترجع تسأل إذا احتجت أي شيء! موسى والمتجر بخدمتك. 🛍️",
-                        "الله يوفقك! وتذكر: فحص مجاني قبل الدفع وضمان سنة! 👌"
-                    ];
-                    return farewells[Math.floor(Math.random() * farewells.length)];
-                },
-                
-                // معلومات موسى
-                getMousaInfo() {
-                    const p = this.mousaProfile;
-                    return `🆔 **الاسم:** ${p.name}\n🎂 **العمر:** ${p.age} سنة\n🌍 **الجنسية:** ${p.nationality}\n🏠 **السكن:** ${p.residence}\n🎓 **الدراسة:** طالب ${p.education.major} - ${p.education.university} (سنة ${p.education.year})\n🏪 **المتجر:** ${p.store.name}\n📍 **موقع المتجر:** ${p.store.location}\n📞 **التواصل:** ${p.store.phone}\n\nأنا دائماً هنا لخدمتكم! 😊`;
-                },
-                
-                // رد الأسعار
-                getPriceResponse(message) {
-                    const product = this.findProductInMessage(message);
-                    if (product) {
-                        return `💰 **سعر ${product.name}:** ${product.price.toLocaleString()} دينار عراقي\n\n📋 **يشمل السعر:**\n✓ فحص مجاني قبل الدفع\n✓ ضمان سنة كاملة\n✓ شحن مجاني داخل بغداد\n✓ تغليف هدايا فاخر\n\n🛒 **للشراء:** اضغط على زر "أضف للسلة" بجانب المنتج!`;
-                    }
-                    
-                    // إذا لم يذكر منتج محدد
-                    return `أي منتج تريد معرفة سعره؟\n\nمثلاً:\n• "كم سعر ايفون 15؟"\n• "سعر سامسونج S24"\n• "بكام البلايستيشن 5؟"\n\nأو اذكر اسم المنتج المحدد وسأجيبك بدقة!`;
-                },
-                
-                // جميع المنتجات
-                getAllProducts() {
-                    let response = `🛍️ **جميع المنتجات المتاحة:**\n\n`;
-                    
-                    const categories = {
-                        '📱 أبل': productsData.apple.slice(0, 3),
-                        '📱 سامسونج': productsData.samsung.slice(0, 3),
-                        '🎮 ألعاب': productsData.gaming.slice(0, 3),
-                        '🎧 إكسسوارات': productsData.accessories.slice(0, 3),
-                        '⌚ ساعات': productsData.health.slice(0, 2).concat(productsData.apple[4])
-                    };
-                    
-                    for (const [catName, products] of Object.entries(categories)) {
-                        response += `**${catName}:**\n`;
-                        products.forEach(p => {
-                            response += `• ${p.name} - ${p.price.toLocaleString()} د.ع\n`;
-                        });
-                        response += '\n';
-                    }
-                    
-                    response += `💡 **نصيحة:** اكتب اسم المنتج المحدد عشان أعطيك كل التفاصيل عنه!`;
-                    
-                    return response;
-                },
-                
-                // منتجات أبل
-                getAppleProducts() {
-                    let response = `🍎 **منتجات أبل:**\n\n`;
-                    productsData.apple.slice(0, 5).forEach(p => {
-                        response += `• ${p.name} - ${p.price.toLocaleString()} د.ع\n`;
-                    });
-                    response += `\n💡 **مميزات أبل:** نظام متكامل، كاميرات مذهلة، أداء سلس، ضمان عالمي.`;
-                    return response;
-                },
-                
-                // منتجات سامسونج
-                getSamsungProducts() {
-                    let response = `📱 **منتجات سامسونج:**\n\n`;
-                    productsData.samsung.slice(0, 5).forEach(p => {
-                        response += `• ${p.name} - ${p.price.toLocaleString()} د.ع\n`;
-                    });
-                    response += `\n💡 **مميزات سامسونج:** شاشات مذهلة، كاميرات متطورة، قلم S-Pen، بطاريات قوية.`;
-                    return response;
-                },
-                
-                // منتجات الألعاب
-                getGamingProducts() {
-                    let response = `🎮 **أجهزة الألعاب:**\n\n`;
-                    productsData.gaming.slice(0, 5).forEach(p => {
-                        response += `• ${p.name} - ${p.price.toLocaleString()} د.ع\n`;
-                    });
-                    response += `\n💡 **مميزات:** أداء عالي، ألعاب حصرية، تجربة غامرة، دعم VR.`;
-                    return response;
-                },
-                
-                // الإكسسوارات
-                getAccessoriesProducts() {
-                    let response = `🎧 **الإكسسوارات:**\n\n`;
-                    productsData.accessories.slice(0, 5).forEach(p => {
-                        response += `• ${p.name} - ${p.price.toLocaleString()} د.ع\n`;
-                    });
-                    response += `\n💡 **مميزات:** لاسلكية، إلغاء ضوضاء، مقاومة للماء، صوت عالي الجودة.`;
-                    return response;
-                },
-                
-                // الساعات
-                getWatchesProducts() {
-                    let response = `⌚ **الساعات الذكية:**\n\n`;
-                    
-                    // ساعات أبل
-                    response += `**أبل:**\n`;
-                    response += `• ${productsData.apple[4].name} - ${productsData.apple[4].price.toLocaleString()} د.ع\n`;
-                    
-                    // ساعات سامسونج
-                    response += `\n**سامسونج:**\n`;
-                    response += `• ${productsData.samsung[5].name} - ${productsData.samsung[5].price.toLocaleString()} د.ع\n`;
-                    
-                    // ساعات صحية
-                    response += `\n**ساعات اللياقة:**\n`;
-                    productsData.health.slice(0, 2).forEach(p => {
-                        response += `• ${p.name} - ${p.price.toLocaleString()} د.ع\n`;
-                    });
-                    
-                    response += `\n💡 **مميزات:** تتبع اللياقة، مراقبة النوم، مقاومة للماء، شاشات OLED.`;
-                    return response;
-                },
-                
-                // اللابتوبات
-                getLaptopsProducts() {
-                    let response = `💻 **اللابتوبات:**\n\n`;
-                    
-                    // ماك بوك
-                    response += `**أبل:**\n`;
-                    response += `• ${productsData.apple[7].name} - ${productsData.apple[7].price.toLocaleString()} د.ع\n`;
-                    
-                    // سامسونج بوك
-                    response += `\n**سامسونج:**\n`;
-                    response += `• ${productsData.samsung[8].name} - ${productsData.samsung[8].price.toLocaleString()} د.ع\n`;
-                    
-                    response += `\n💡 **مميزات:** معالجات قوية، شاشات عالية الدقة، تصميم أنيق، بطاريات طويلة الأمد.`;
-                    return response;
-                },
-                
-                // رد عام
-                getGeneralResponse(message) {
-                    const responses = [
-                        `لم أفهم سؤالك تماماً. هل يمكنك إعادة صياغته؟\nمثلاً: "ما سعر آيفون 15؟" أو "هل يوجد توصيل خارج بغداد؟"`,
-                        `تأكد من كتابة اسم المنتج بشكل صحيح أو استخدم شريط البحث في أعلى الصفحة.`,
-                        `جميع منتجاتنا أصلية 100% مع فحص قبل الدفع وضمان مصنع! 🔧`,
-                        `هل تقصد منتج معين؟ يمكنك استخدام شريط البحث أو التبويبات للعثور على المنتجات.`,
-                        `يمكنني مساعدتك في العثور على المنتج المناسب! هل تبحث عن هاتف، لابتوب، أم جهاز ألعاب؟`
-                    ];
-                    
-                    // إذا كان السؤال يحتوي على كلمات قد تكون عن المنتجات
-                    if (message.includes('وش') || message.includes('شنو') || message.includes('ايه') || 
-                        message.includes('ايش') || message.includes('شو')) {
-                        return `إذا كنت تبحث عن منتج معين، جرب:\n• "وش عندك من هواتف؟"\n• "شنو منتجات الألعاب؟"\n• "ايه أسعار الآيفونات؟"\n\nأو استخدم التبويبات في أعلى الصفحة لتصفح الأقسام!`;
-                    }
-                    
-                    return responses[Math.floor(Math.random() * responses.length)];
-                },
-                
-                // التحقق من التحية
-                isGreeting(message) {
-                    const greetings = ['مرحبا', 'اهلا', 'السلام', 'هاي', 'هلا', 'صباح', 'مساء', 'hello', 'hi', 'اهلين'];
-                    return greetings.some(greet => message.includes(greet));
-                },
-                
-                // التحقق من الوداع
-                isFarewell(message) {
-                    const farewells = ['باي', 'مع السلامة', 'الى اللقاء', 'شكرا', 'مشكور', 'تمام', 'ok', 'bye', 'تسلم', 'يعطيك العافية'];
-                    return farewells.some(farewell => message.includes(farewell));
                 }
-            };
-            
-            // إظهار الرسالة الترحيبية بعد تحميل البوت
-            setTimeout(() => {
-                if (smartBot) {
-                    const welcomeMessage = smartBot.getGreetingResponse();
-                    addBotMessage(welcomeMessage, 'bot');
+                
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = product;
                 }
-            }, 1000);
-        }
-
-        // إعداد أحداث البوت
-        function setupBotEvents() {
-            const botButton = document.getElementById('mousaBotButton');
-            const chatWindow = document.getElementById('botChatWindow');
-            const closeBtn = chatWindow.querySelector('.close-bot');
-            const sendBtn = document.getElementById('sendToBot');
-            const botInput = document.getElementById('botInput');
-            
-            // فتح/إغلاق النافذة
-            botButton.addEventListener('click', toggleBotChat);
-            closeBtn.addEventListener('click', toggleBotChat);
-            
-            // إرسال الرسالة
-            sendBtn.addEventListener('click', botSendMessage);
-            botInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') botSendMessage();
-            });
-        }
-
-        // دالة تبديل نافذة البوت
-        function toggleBotChat() {
-            const chatWindow = document.getElementById('botChatWindow');
-            chatWindow.classList.toggle('active');
-            
-            if (chatWindow.classList.contains('active')) {
-                document.getElementById('botInput').focus();
             }
-        }
+            
+            return bestScore > 2 ? bestMatch : null;
+        },
 
-        // إرسال رسالة للبوت
-        async function botSendMessage() {
-            const input = document.getElementById('botInput');
-            const message = input.value.trim();
+        // حساب التشابه بين كلمتين
+        calculateSimilarity(str1, str2) {
+            if (str1 === str2) return 1;
+            if (str1.length < 2 || str2.length < 2) return 0;
             
-            if (!message) return;
+            const bigrams1 = this.getBigrams(str1);
+            const bigrams2 = this.getBigrams(str2);
             
-            // إضافة رسالة المستخدم
-            addBotMessage(message, 'user');
-            input.value = '';
+            const intersection = bigrams1.filter(bigram => bigrams2.includes(bigram));
             
-            // عرض مؤشر الكتابة
-            showBotTyping();
-            
-            // الحصول على رد البوت بعد تأخير بسيط لمحاكاة التفكير
-            setTimeout(async () => {
-                if (smartBot) {
-                    const response = await smartBot.processMessage(message);
-                    
-                    // إخفاء مؤشر الكتابة وإضافة الرد
-                    hideBotTyping();
-                    addBotMessage(response, 'bot');
-                    
-                    // حفظ المحادثة
-                    conversationHistory.push({ role: 'user', content: message });
-                    conversationHistory.push({ role: 'assistant', content: response });
-                    
-                    // اقتراح أسئلة تلقائية
-                    setTimeout(suggestQuestions, 500);
-                }
-            }, 800); // تأخير 800 مللي ثانية
-        }
+            return (2.0 * intersection.length) / (bigrams1.length + bigrams2.length);
+        },
 
-        // إضافة رسالة للدردشة
-        function addBotMessage(message, sender) {
-            const messagesDiv = document.getElementById('botMessages');
-            if (!messagesDiv) return;
-            
-            const messageContainer = document.createElement('div');
-            messageContainer.className = 'message-container';
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = sender === 'user' ? 'user-message' : 'bot-message';
-            
-            const time = new Date().toLocaleTimeString('ar-IQ', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            
-            messageDiv.innerHTML = `
-                <div class="message-content">${message}</div>
-                <div class="message-time">${time}</div>
-            `;
-            
-            messageContainer.appendChild(messageDiv);
-            messagesDiv.appendChild(messageContainer);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        // عرض مؤشر الكتابة
-        function showBotTyping() {
-            const messagesDiv = document.getElementById('botMessages');
-            if (!messagesDiv) return;
-            
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator';
-            typingDiv.id = 'typingIndicator';
-            typingDiv.innerHTML = `
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            `;
-            
-            messagesDiv.appendChild(typingDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        // إخفاء مؤشر الكتابة
-        function hideBotTyping() {
-            const typingDiv = document.getElementById('typingIndicator');
-            if (typingDiv) {
-                typingDiv.remove();
+        getBigrams(str) {
+            const bigrams = [];
+            for (let i = 0; i < str.length - 1; i++) {
+                bigrams.push(str.substr(i, 2));
             }
-        }
+            return bigrams;
+        },
 
-        // اقتراح أسئلة تلقائية
-        function suggestQuestions() {
-            const suggestions = [
-                "ما سعر آيفون 15؟",
-                "هل يوجد توصيل خارج بغداد؟",
-                "مين موسى؟",
-                "وش مميزات سامسونج S24؟",
-                "كم فترة الضمان؟",
-                "وين عنوان المحل؟",
-                "وش عندك من أجهزة ألعاب؟",
-                "شنو اسعار الساعات؟"
+        // دوال المساعدة للتحليل
+        isGreeting(message) {
+            const greetings = ['مرحبا', 'اهلا', 'السلام', 'هاي', 'هلا', 'صباح', 'مساء', 'hello', 'hi', 'اهلين', 'مرحب', 'الو'];
+            return greetings.some(greet => message.includes(greet));
+        },
+
+        isFarewell(message) {
+            const farewells = ['باي', 'مع السلامة', 'الى اللقاء', 'شكرا', 'مشكور', 'تمام', 'ok', 'bye', 'تسلم', 'يعطيك العافية', 'شكر'];
+            return farewells.some(farewell => message.includes(farewell));
+        },
+
+        isAboutDeveloper(message) {
+            const keywords = ['مطور', 'مهندس', 'مبرمج', 'موسى', 'صالح', 'البحر', 'صاحب', 'مين', 'من هو', 'شخص', 'مالك', 'مدير'];
+            return keywords.some(keyword => message.includes(keyword));
+        },
+
+        extractDeveloperTopic(message) {
+            if (message.includes('دراس') || message.includes('جامع') || message.includes('تخصص') || 
+                message.includes('تدرس') || message.includes('شهادة')) {
+                return 'education';
+            } else if (message.includes('مهار') || message.includes('قدرات') || message.includes('يشتغل') || 
+                      message.includes('يعمل') || message.includes('شغله')) {
+                return 'skills';
+            } else if (message.includes('انجاز') || message.includes('مشاريع') || message.includes('عمل') || 
+                      message.includes('انجز')) {
+                return 'achievements';
+            } else if (message.includes('اتصل') || message.includes('تواصل') || message.includes('رقم') || 
+                      message.includes('ايميل') || message.includes('بريد')) {
+                return 'contact';
+            }
+            return 'general';
+        },
+
+        isProductInquiry(message) {
+            const keywords = ['منتج', 'سلعة', 'بضاعة', 'جهاز', 'ايه المنتجات', 'وش عندك', 'عندك', 'يشمل', 'يشملون', 'يشملو'];
+            return keywords.some(keyword => message.includes(keyword));
+        },
+
+        extractProductDetail(message) {
+            if (message.includes('مواصفات') || message.includes('مميزات') || message.includes('ميزات') || 
+                message.includes('خصائص') || message.includes('تفاصيل')) {
+                return 'specs';
+            } else if (message.includes('استخدام') || message.includes('كيفية') || message.includes('طريقة') || 
+                      message.includes('كيف استخدم')) {
+                return 'usage';
+            } else if (message.includes('مقارنة') || message.includes('افضل') || message.includes('ايش الفرق')) {
+                return 'comparison';
+            }
+            return 'general';
+        },
+
+        isPriceQuestion(message) {
+            const keywords = ['سعر', 'كم', 'ثمن', 'بكام', 'بكم', 'تكلفة', 'قيمة', 'كَم', 'كم سعر', 'بكام', 'ب كام'];
+            return keywords.some(keyword => message.includes(keyword));
+        },
+
+        isStoreQuestion(message) {
+            const keywords = ['متجر', 'محل', 'دكان', 'المحل', 'المتجر', 'موقع', 'عنوان', 'اين', 'وين', 'مكان'];
+            return keywords.some(keyword => message.includes(keyword));
+        },
+
+        extractStoreTopic(message) {
+            if (message.includes('ساعات') || message.includes('فتح') || message.includes('اغلاق') || 
+                message.includes('يفتح') || message.includes('يغلق') || message.includes('وقت')) {
+                return 'hours';
+            } else if (message.includes('سياسة') || message.includes('شروط') || message.includes('قوانين')) {
+                return 'policies';
+            } else if (message.includes('رسالة') || message.includes('فلسفة') || message.includes('هدف')) {
+                return 'mission';
+            }
+            return 'general';
+        },
+
+        isDeliveryQuestion(message) {
+            const keywords = ['توصيل', 'شحن', 'يوصل', 'موصل', 'شحنة', 'تسليم', 'يوصلو', 'يوصلون'];
+            return keywords.some(keyword => message.includes(keyword));
+        },
+
+        isWarrantyQuestion(message) {
+            const keywords = ['ضمان', 'استبدال', 'رجوع', 'يرجع', 'يسترجع', 'كفالة', 'تضمن', 'ضمانات'];
+            return keywords.some(keyword => message.includes(keyword));
+        },
+
+        isPaymentQuestion(message) {
+            const keywords = ['دفع', 'دفعة', 'كاش', 'نقد', 'كريدت', 'فيزا', 'ماستركارد', 'بطاقة', 'تقسيط'];
+            return keywords.some(keyword => message.includes(keyword));
+        },
+
+        guessTopic(message) {
+            if (message.includes('هاتف') || message.includes('موبايل') || message.includes('جوال')) {
+                return 'phones';
+            } else if (message.includes('لابتوب') || message.includes('كمبيوتر') || message.includes('لاب')) {
+                return 'laptops';
+            } else if (message.includes('العاب') || message.includes('جيم') || message.includes('ترفيه')) {
+                return 'gaming';
+            } else if (message.includes('سماع') || message.includes('هيدفون') || message.includes('صوت')) {
+                return 'audio';
+            } else if (message.includes('ساع') || message.includes('watch')) {
+                return 'watches';
+            }
+            return 'general';
+        },
+
+        // توليد رد ذكي
+        async generateSmartResponse(analysis, originalMessage) {
+            switch(analysis.intent) {
+                case 'greeting':
+                    return this.generateGreetingWithSuggestions();
+                    
+                case 'farewell':
+                    return this.generateFarewellResponse();
+                    
+                case 'about_developer':
+                    return this.generateDeveloperResponse(analysis.topic);
+                    
+                case 'product_inquiry':
+                    return this.generateProductResponse(analysis.product, analysis.detail);
+                    
+                case 'price_inquiry':
+                    return this.generatePriceResponse(analysis.product, originalMessage);
+                    
+                case 'store_info':
+                    return this.generateStoreResponse(analysis.topic);
+                    
+                case 'delivery_info':
+                    return this.generateDeliveryResponse();
+                    
+                case 'warranty_info':
+                    return this.generateWarrantyResponse();
+                    
+                case 'payment_info':
+                    return this.generatePaymentResponse();
+                    
+                default:
+                    return this.generateIntelligentResponse(originalMessage);
+            }
+        },
+
+        // توليد رد ذكي مع اقتراحات
+        generateGreetingWithSuggestions() {
+            const greetings = [
+                `🎉 **أهلاً وسهلاً بك في مساعد موسى!**\n\nأنا هنا لمساعدتك في:\n✨ اكتشاف منتجاتنا\n✨ الإجابة على استفساراتك\n✨ تقديم النصائح التقنية\n\n**اقتراحات للبدء:**`,
+                `🌟 **مرحباً! أنا مساعد موسى 🤖**\n\nسعداء بخدمتك في متجر موسى للإلكترونيات!\nيمكنني مساعدتك في:\n🔍 البحث عن المنتجات\n💰 معرفة الأسعار\n🚚 معلومات التوصيل\n\n**جرب تسأل عن:**`,
+                `👋 **أهلين! كيف يمكنني مساعدتك اليوم؟**\n\nأنا المساعد الذكي لمتجر موسى، جاهز للإجابة على:\n📱 استفسارات المنتجات\n🛒 عملية الشراء\n📞 الدعم الفني\n\n**أسئلة مقترحة:**`
             ];
             
-            const messagesDiv = document.getElementById('botMessages');
-            if (!messagesDiv) return;
+            const greeting = greetings[Math.floor(Math.random() * greetings.length)];
             
-            // إزالة الاقتراحات القديمة
-            const oldSuggestions = document.querySelector('.suggested-questions');
-            if (oldSuggestions) oldSuggestions.remove();
+            const suggestions = [
+                "🛍️ **تصفح المنتجات:** 'عرض كل المنتجات' أو 'عرض هواتف سامسونج'",
+                "👨‍💻 **عن المطور:** 'من هو مطور الموقع؟' أو 'معلومات عن المهندس موسى'",
+                "💰 **الأسعار:** 'كم سعر آيفون 15؟' أو 'أسعار أجهزة الألعاب'",
+                "🚚 **التوصيل:** 'هل يوجد توصيل لبصرة؟' أو 'مدة التوصيل'",
+                "🛡️ **الضمان:** 'كم فترة الضمان؟' أو 'شروط الاستبدال'",
+                "💳 **الدفع:** 'طرق الدفع المتاحة' أو 'هل يوجد تقسيط؟'"
+            ];
             
-            // إنشاء اقتراحات جديدة
-            const suggestionsDiv = document.createElement('div');
-            suggestionsDiv.className = 'suggested-questions';
+            return `${greeting}\n\n${suggestions.join('\n')}`;
+        },
+
+        generateFarewellResponse() {
+            const farewells = [
+                `✨ **شكراً لك على تواصلك!**\n\nنتمنى لك تجربة تسوق ممتعة في متجر موسى للإلكترونيات.\n\n🛍️ **تذكر:** جميع منتجاتنا أصلية 100% مع فحص مجاني قبل الدفع!\n📞 **للتواصل المباشر:** 0771 753 8315`,
+                `🌟 **أتمنى أن أكون قد ساعدتك!**\n\nلا تتردد في العودة لأي استفسار آخر.\n\n✅ **مميزات متجرنا:**\n• فحص مجاني قبل الدفع\n• ضمان سنة كاملة\n• توصيل سريع\n• دعم فني متكامل`,
+                `🙏 **شكراً لزيارتك!**\n\nنحن هنا دائماً لخدمتك.\n\n💡 **نصيحة:** استخدم التبويبات في الأعلى لتصفح المنتجات بسهولة!\n📧 **للاقتراحات:** mousasaleh2024@gmail.com`
+            ];
             
-            // اختيار 4 اقتراحات عشوائية
-            const randomSuggestions = suggestions
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 4);
+            return farewells[Math.floor(Math.random() * farewells.length)];
+        },
+
+        generateDeveloperResponse(topic) {
+            const dev = this.knowledgeBase.developer;
             
-            randomSuggestions.forEach(question => {
-                const btn = document.createElement('button');
-                btn.className = 'suggested-question';
-                btn.textContent = question;
-                btn.onclick = () => {
-                    document.getElementById('botInput').value = question;
-                    botSendMessage();
-                };
-                suggestionsDiv.appendChild(btn);
-            });
+            switch(topic) {
+                case 'education':
+                    return `🎓 **التعليم والتأهيل:**\n\n${dev.name}\n${dev.education.degree}\n${dev.education.university}\n${dev.education.status}\n\n🌐 **مجالات التخصص:**\n${dev.skills.map(skill => `• ${skill}`).join('\n')}\n\n📞 **للتواصل التقني:** ${dev.contact.email}`;
+                    
+                case 'skills':
+                    return `💼 **المهارات والخبرات:**\n\n${dev.name}\n\n🛠️ **المهارات التقنية:**\n${dev.skills.map(skill => `• ${skill}`).join('\n')}\n\n🚀 **المشاريع:**\n${dev.achievements.map(achievement => `• ${achievement}`).join('\n')}\n\n📱 **التواصل:** ${dev.contact.phone}`;
+                    
+                case 'achievements':
+                    return `🏆 **الإنجازات والمشاريع:**\n\n${dev.name}\n\n✅ **أبرز الإنجازات:**\n${dev.achievements.map(achievement => `• ${achievement}`).join('\n')}\n\n🎯 **الفلسفة:** ${dev.philosophy}\n\n📍 **المقر:** ${dev.contact.location}`;
+                    
+                case 'contact':
+                    return `📞 **معلومات التواصل:**\n\n${dev.name}\n${dev.title}\n\n📧 **البريد الإلكتروني:** ${dev.contact.email}\n📱 **الهاتف:** ${dev.contact.phone}\n📍 **الموقع:** ${dev.contact.location}\n\n⏰ **أوقات التواصل:**\n• أيام الأسبوع: 9 صباحاً - 8 مساءً\n• الجمعة: 2 ظهراً - 8 مساءً`;
+                    
+                default:
+                    return `👨‍💻 **${dev.name}**\n${dev.title}\n\n🎯 **التخصص:** ${dev.education.degree}\n🏫 **الجامعة:** ${dev.education.university}\n📊 **الحالة:** ${dev.education.status}\n\n💡 **المهارات الرئيسية:**\n${dev.skills.slice(0, 3).map(skill => `• ${skill}`).join('\n')}\n\n🌟 **أبرز الإنجازات:**\n${dev.achievements.slice(0, 2).map(achievement => `• ${achievement}`).join('\n')}\n\n📞 **للتواصل:** ${dev.contact.email} | ${dev.contact.phone}`;
+            }
+        },
+
+        generateProductResponse(product, detail) {
+            if (!product) {
+                return this.getAllProductsCategorized();
+            }
             
-            messagesDiv.appendChild(suggestionsDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            switch(detail) {
+                case 'specs':
+                    return this.getProductSpecs(product);
+                case 'usage':
+                    return this.getProductUsage(product);
+                case 'comparison':
+                    return this.getProductComparison(product);
+                default:
+                    return this.getProductFullInfo(product);
+            }
+        },
+
+        getProductFullInfo(product) {
+            return `📦 **${product.name}**\n\n💰 **السعر:** ${product.price.toLocaleString()} دينار عراقي\n\n📝 **الوصف:** ${product.description}\n\n⚙️ **المواصفات الرئيسية:**\n${Object.entries(product.specs).map(([key, value]) => `• **${key}:** ${value}`).join('\n')}\n\n✅ **المميزات:**\n${product.advantages.map(adv => `• ${adv}`).join('\n')}\n\n🛒 **للشراء:** أضف المنتج للسلة من صفحة المتجر!\n🔍 **الضمان:** سنة كاملة مع فحص مجاني قبل الدفع`;
+        },
+
+        getProductSpecs(product) {
+            return `📋 **المواصفات الفنية لـ ${product.name}:**\n\n${Object.entries(product.specs).map(([key, value]) => `**${key.toUpperCase()}:** ${value}`).join('\n\n')}\n\n💡 **ملاحظات:**\n• جميع المواصفات معتمدة من الشركة المصنعة\n• المنتج أصلية 100% مع ضمان عالمي\n• يشمل فحص مجاني قبل الدفع`;
+        },
+
+        getProductUsage(product) {
+            const usageTips = {
+                'iPhone': '• احتفظ بالتحديثات دائماً محدثة\n• استخدم iCloud للنسخ الاحتياطي\n• قم بتنظيف منفذ الشحن بانتظام',
+                'Samsung': '• فعّل وضع توفير الطاقة عند الحاجة\n• استخدم Game Booster للألعاب\n• حافظ على تحديث One UI',
+                'PlayStation': '• حافظ على التهوية المناسبة\n• قم بتحديث النظام بانتظام\n• استخدم وضع الراحة للألعاب الطويلة',
+                'Xbox': '• فعّل Quick Resume لتجربة أفضل\n• استخدم Game Pass لاكتشاف ألعاب جديدة\n• حافظ على تحديث النظام'
+            };
+            
+            let tips = '💡 **نصائح عامة للاستخدام:**\n• قم بشحن الجهاز قبل الاستخدام الأول\n• احتفظ بالفاتورة الأصلية للضمان\n• اقرأ دليل المستخدم بعناية';
+            
+            for (const [type, typeTips] of Object.entries(usageTips)) {
+                if (product.name.toLowerCase().includes(type.toLowerCase())) {
+                    tips += `\n\n🔧 **نصائح خاصة لـ ${type}:**\n${typeTips}`;
+                    break;
+                }
+            }
+            
+            return `🎮 **دليل الاستخدام لـ ${product.name}:**\n\n${tips}\n\n📞 **لدعم فني إضافي:** 0771 753 8315`;
+        },
+
+        getProductComparison(product) {
+            let comparison = `🆚 **مقارنة ${product.name}:**\n\n`;
+            
+            if (product.name.includes('iPhone')) {
+                comparison += `✅ **مزايا آيفون:**\n• نظام iOS السلس والمتكامل\n• كاميرات متميزة للتصوير\n• دعم تطبيقات مخصصة\n• تحديثات طويلة المدى\n\n`;
+                comparison += `🤔 **نقاط للتفكير:**\n• نظام مغلق نسبياً\n• أسعار أعلى بالمقارنة\n• تحتاج بيئة أبل كاملة لأقصى استفادة`;
+            } else if (product.name.includes('Samsung')) {
+                comparison += `✅ **مزايا سامسونج:**\n• نظام مفتوح وقابل للتخصيص\n• شاشات AMOLED مذهلة\n• كاميرات متعددة الاستخدامات\n• بطاريات طويلة الأمد\n\n`;
+                comparison += `🤔 **نقاط للتفكير:**\n• تحديثات أقصر مدة\n• قد يكون النظام معقداً للمبتدئين`;
+            } else if (product.name.includes('PlayStation')) {
+                comparison += `✅ **مزايا بلايستيشن:**\n• ألعاب حصرية متميزة\n• مجتمع لاعبين كبير\n• جهاز DualSense المتطور\n• دعم VR\n\n`;
+                comparison += `🤔 **نقاط للتفكير:**\n• خدمة الاشتراك إلزامية للألعاب المتعددة\n• مساحة تخزين محدودة`;
+            }
+            
+            comparison += `\n\n💡 **نصيحة:** اختيار المنتج يعتمد على:\n• احتياجاتك الشخصية\n• الميزانية المتاحة\n• النظام الذي تفضله`;
+            
+            return comparison;
+        },
+
+        getAllProductsCategorized() {
+            let response = `🛍️ **جميع المنتجات في متجر موسى:**\n\n`;
+            
+            for (const category in productsDatabase) {
+                const products = productsDatabase[category];
+                if (products.length === 0) continue;
+                
+                let categoryName = '';
+                switch(category) {
+                    case 'apple': categoryName = '📱 أجهزة أبل'; break;
+                    case 'samsung': categoryName = '📱 أجهزة سامسونج'; break;
+                    case 'gaming': categoryName = '🎮 أجهزة الألعاب'; break;
+                    case 'accessories': categoryName = '🎧 الإكسسوارات'; break;
+                    default: categoryName = category;
+                }
+                
+                response += `**${categoryName}:**\n`;
+                products.forEach((p, index) => {
+                    if (index < 4) {
+                        response += `• ${p.name} - ${p.price.toLocaleString()} د.ع\n`;
+                    }
+                });
+                
+                if (products.length > 4) {
+                    response += `• و ${products.length - 4} منتجات أخرى...\n`;
+                }
+                response += '\n';
+            }
+            
+            response += `💡 **للمزيد من التفاصيل:** اكتب اسم المنتج المحدد\n🔍 **للبحث:** استخدم شريط البحث في أعلى الصفحة`;
+            
+            return response;
+        },
+
+        generatePriceResponse(product, originalMessage) {
+            if (product) {
+                return `💰 **سعر ${product.name}:** ${product.price.toLocaleString()} دينار عراقي\n\n📋 **ماذا يشمل السعر:**\n✅ فحص مجاني قبل الدفع\n✅ ضمان سنة كاملة من المصنع\n✅ توصيل مجاني داخل بغداد\n✅ تغليف هدايا فاخر\n✅ دعم فني مجاني لمدة سنة\n\n🎯 **لماذا نختار متجر موسى:**\n• أسعار منافسة\n• جودة مضمونة 100%\n• خدمة ما بعد البيع\n• دعم تقني متكامل\n\n🛒 **للطلب:** أضف المنتج للسلة ثم أكمل عملية الشراء`;
+            } else {
+                // البحث الذكي عن السعر حتى لو لم يكن المنتج محدداً بدقة
+                const possibleProducts = this.searchAllProducts(originalMessage);
+                
+                if (possibleProducts.length > 0) {
+                    let response = `🔍 **بناءً على سؤالك "${originalMessage}"، هذه المنتجات المتاحة:**\n\n`;
+                    
+                    possibleProducts.slice(0, 3).forEach(p => {
+                        response += `• **${p.name}:** ${p.price.toLocaleString()} د.ع\n`;
+                    });
+                    
+                    if (possibleProducts.length > 3) {
+                        response += `\n💰 **و ${possibleProducts.length - 3} منتجات أخرى...**`;
+                    }
+                    
+                    response += `\n\n💡 **للحصول على سعر محدد:** اكتب اسم المنتج بالكامل\nمثال: "سعر ايفون 15 برو ماكس"`;
+                    
+                    return response;
+                }
+                
+                return `🤔 **لم أتعرف على المنتج المحدد في سؤالك.**\n\n💡 **جرب هذه الصيغ:**\n• "كم سعر ايفون 15 برو؟"\n• "سعر سامسونج S24 الترا"\n• "بكام البلايستيشن 5؟"\n• "كم تكلفة ساعة أبل 9؟"\n\n🔍 **أو استخدم:**\n• التبويبات في الأعلى لتصفح الأقسام\n• شريط البحث للبحث المباشر`;
+            }
+        },
+
+        searchAllProducts(query) {
+            const results = [];
+            const searchTerms = query.toLowerCase().split(' ');
+            
+            for (const category in productsDatabase) {
+                for (const product of productsDatabase[category]) {
+                    let matchScore = 0;
+                    const searchString = (product.name + ' ' + (product.names || []).join(' ')).toLowerCase();
+                    
+                    for (const term of searchTerms) {
+                        if (term.length < 2) continue;
+                        
+                        if (searchString.includes(term)) {
+                            matchScore += 3;
+                        } else if (this.calculateSimilarity(term, product.name.toLowerCase()) > 0.6) {
+                            matchScore += 2;
+                        }
+                    }
+                    
+                    if (matchScore > 0) {
+                        results.push({ product, score: matchScore });
+                    }
+                }
+            }
+            
+            results.sort((a, b) => b.score - a.score);
+            return results.map(r => r.product);
+        },
+
+        generateStoreResponse(topic) {
+            const store = this.knowledgeBase.store;
+            
+            switch(topic) {
+                case 'hours':
+                    return `⏰ **أوقات عمل متجر موسى:**\n\n🕘 **الأحد - الخميس:** 9:00 صباحاً - 10:00 مساءً\n🕌 **الجمعة:** 2:00 ظهراً - 10:00 مساءً\n🌟 **السبت:** 9:00 صباحاً - 10:00 مساءً\n\n📞 **للطلبات خارج أوقات العمل:**\n• الطلب عبر الموقع: متاح 24/7\n• التوصيل: في اليوم التالي خلال ساعات العمل\n• الدعم الفني: متاح عبر الواتساب`;
+                    
+                case 'policies':
+                    return `📜 **سياسات متجر موسى:**\n\n✅ **سياسة الجودة:**\n• جميع المنتجات أصلية 100%\n• فحص مجاني قبل الدفع\n• شهادات ضمان معتمدة\n\n✅ **سياسة التوصيل:**\n• داخل بغداد: مجاني خلال 24 ساعة\n• خارج بغداد: 2-3 أيام عمل\n• التتبع: متاح لجميع الشحنات\n\n✅ **سياسة الاستبدال:**\n• 7 أيام لاستبدال المنتجات المعيبة\n• فاتورة أصلية مطلوبة\n• المنتج يجب أن يكون بحالته الأصلية`;
+                    
+                case 'mission':
+                    return `🎯 **رسالة وفلسفة متجر موسى:**\n\n"${store.mission}"\n\n🌟 **قيمنا:**\n${store.values.map(value => `• ${value}`).join('\n')}\n\n🚀 **هدفنا:**\nتقديم أفضل تجربة تسوق إلكتروني في العراق من خلال:\n• منتجات عالية الجودة\n• أسعار تنافسية\n• خدمة عملاء متميزة\n• دعم فني متكامل\n\n📍 **رؤيتنا:**\nأن نكون الوجهة الأولى للتسوق الإلكتروني في العراق`;
+                    
+                default:
+                    return `🏪 **${store.name}**\n\n📅 **تأسس عام:** ${store.founded}\n🎯 **الرسالة:** "${store.mission}"\n\n📍 **الموقع:** بغداد - الكرادة\n📞 **الهاتف:** 0771 753 8315\n📧 **البريد:** mousasaleh2024@gmail.com\n\n⏰ **أوقات العمل:**\n• الأحد-الخميس: 9 ص - 10 م\n• الجمعة: 2 ظ - 10 م\n• السبت: 9 ص - 10 م\n\n✨ **لماذا تختار متجر موسى؟**\n• ثقة وشفافية\n• جودة مضمونة\n• خدمة متميزة\n• دعم مستمر`;
+            }
+        },
+
+        generateDeliveryResponse() {
+            const delivery = this.knowledgeBase.store.policies.delivery;
+            
+            return `🚚 **خدمة التوصيل في متجر موسى:**\n\n📦 **خيارات التوصيل:**\n1️⃣ **التوصيل السريع داخل بغداد:**\n   • ${delivery.baghdad}\n   • مجاني بالكامل\n   • تغليف آمن وفاخر\n\n2️⃣ **التوصيل للمحافظات:**\n   • ${delivery.outside}\n   • ${delivery.nationwide}\n   • نظام تتبع متقدم\n\n3️⃣ **التوصيل الدولي:**\n   • متوفر حسب الطلب\n   • تكلفة حسب الوجهة\n   • مدة 5-10 أيام عمل\n\n📋 **مراحل التوصيل:**\n1. تأكيد الطلب خلال ساعة\n2. تجهيز المنتج والفحص\n3. التغليف الآمن\n4. التوصيل حسب المنطقة\n5. الدفع عند الاستلام\n\n💡 **نصائح للتوصيل:**\n• تأكد من صحة العنوان\n• كن متاحاً للاتصال\n• احتفظ برقم الطلب\n\n❓ **أسئلة شائعة:**\n• **هل يمكن التوصيل في عطلة نهاية الأسبوع؟** نعم، حسب المنطقة\n• **هل يوجد توصيل عاجل؟** نعم، برسوم إضافية\n• **كيف أتتبع طلبي؟** عبر رقم الطلب على الواتساب`;
+        },
+
+        generateWarrantyResponse() {
+            const warranty = this.knowledgeBase.store.policies.warranty;
+            
+            return `🛡️ **سياسة الضمان والاستبدال:**\n\n✅ **مدة الضمان:** ${warranty.duration}\n🔄 **فترة الاستبدال:** ${warranty.return}\n📋 **شروط الضمان:** ${warranty.conditions}\n\n🔧 **ما يشمله الضمان:**\n• أعطال المصنع والعيوب الهيكلية\n• مشاكل البطارية (خلال 6 أشهر)\n• مشاكل الشاشة (خلال سنة)\n• أعطال المكونات الداخلية\n\n🚫 **ما لا يشمله الضمان:**\n• الأضرار الناتجة عن سوء الاستخدام\n• الكسر أو الخدوش الخارجية\n• الأعطال بسبب السوائل\n• التعديلات غير المصرح بها\n\n📋 **إجراءات المطالبة بالضمان:**\n1. الاتصال بخدمة العملاء\n2. تقديم الفاتورة الأصلية\n3. فحص المنتج في المتجر\n4. إصدار قرار الضمان خلال 48 ساعة\n5. الإصلاح أو الاستبدال\n\n📞 **مركز الضمان:**\n• الهاتف: 0771 753 8315\n• الواتساب: متاح 24/7 للاستفسارات\n• البريد: mousasaleh2024@gmail.com\n\n💡 **نصائح للحفاظ على الضمان:**\n• احتفظ بالفاتورة الأصلية\n• استخدم الشواحن الأصلية\n• تجنب تعريض الجهاز للسوائل\n• قم بالصيانة الدورية`;
+        },
+
+        generatePaymentResponse() {
+            const payment = this.knowledgeBase.store.policies.payment;
+            
+            return `💳 **طرق الدفع المتاحة:**\n\n${payment.map((method, index) => `${index + 1}️⃣ **${method}**`).join('\n')}\n\n💰 **تفاصيل الدفع:**\n\n**💵 الدفع النقدي:**\n• آمن وسريع\n• لا رسوم إضافية\n• إيصال رسمي مع كل عملية\n\n**🏦 الحوالات البنكية:**\n• البنك: البنك المركزي العراقي\n• اسم المستلم: موسى صالح البحر\n• الرقم: 0771 753 8315\n\n**💳 الدفع الإلكتروني:**\n• كي نت متاح لجميع البنوك\n• فيزا/ماستركارد آمنة\n• تشفير متقدم للحماية\n\n**📊 نظام التقسيط:**\n• متاح على 3 أشهر\n• دفعة أولى 40%\n• فائدة 5% على المتبقي\n• شهادة دخل مطلوبة\n\n🔒 **ضمانات الدفع:**\n• الدفع عند الاستلام متاح لجميع الطلبات\n• فاتورة أصلية مع كل طلب\n• إيصال دفع رسمي\n• حماية بيانات العملاء\n\n❓ **أسئلة شائعة:**\n• **هل يمكن الدفع ببطاقات الائتمان الدولية؟** نعم، جميع البطاقات مقبولة\n• **هل هناك رسوم على الدفع الإلكتروني؟** لا، مجاني بالكامل\n• **كم مدة الموافقة على التقسيط؟** 24 ساعة عمل\n\n💡 **نصيحة:** الدفع عند الاستلام هو الخيار الأكثر أماناً!`;
+        },
+
+        generateIntelligentResponse(originalMessage) {
+            // محاولة فهم السؤال بشكل أعمق
+            const deepAnalysis = this.deepAnalyzeQuestion(originalMessage);
+            
+            if (deepAnalysis.understood) {
+                return this.answerBasedOnDeepAnalysis(deepAnalysis);
+            }
+            
+            // إذا لم يفهم، يعرض مساعدة ذكية
+            return this.generateHelpfulResponse(originalMessage);
+        },
+
+        deepAnalyzeQuestion(message) {
+            const analysis = {
+                understood: false,
+                topic: '',
+                context: '',
+                possibleIntents: []
+            };
+            
+            // تحليل الرسالة بكلمات مفتاحية متقدمة
+            const words = message.toLowerCase().split(' ');
+            
+            // قائمة بجميع الكلمات المفتاحية المعروفة
+            const allKeywords = [];
+            for (const category in productsDatabase) {
+                for (const product of productsDatabase[category]) {
+                    allKeywords.push(...product.name.toLowerCase().split(' '));
+                    if (product.names) {
+                        product.names.forEach(name => {
+                            allKeywords.push(...name.toLowerCase().split(' '));
+                        });
+                    }
+                }
+            }
+            
+            // إضافة كلمات المتجر والمطور
+            allKeywords.push('مطور', 'مهندس', 'موسى', 'متجر', 'توصيل', 'ضمان', 'دفع', 'سعر');
+            
+            // حساب مدى الفهم
+            let matchedKeywords = 0;
+            for (const word of words) {
+                if (word.length > 2 && allKeywords.some(keyword => 
+                    keyword.includes(word) || word.includes(keyword) || 
+                    this.calculateSimilarity(word, keyword) > 0.7)) {
+                    matchedKeywords++;
+                }
+            }
+            
+            analysis.understood = matchedKeywords >= Math.min(2, words.length / 2);
+            
+            if (analysis.understood) {
+                // محاولة تخمين الموضوع
+                if (message.includes('ايفون') || message.includes('ابل') || message.includes('apple')) {
+                    analysis.topic = 'apple_products';
+                    analysis.possibleIntents = ['price', 'specs', 'availability'];
+                } else if (message.includes('سامسونج') || message.includes('samsung')) {
+                    analysis.topic = 'samsung_products';
+                    analysis.possibleIntents = ['price', 'comparison', 'features'];
+                } else if (message.includes('تسليم') || message.includes('يوصل')) {
+                    analysis.topic = 'delivery';
+                    analysis.possibleIntents = ['time', 'cost', 'areas'];
+                }
+            }
+            
+            return analysis;
+        },
+
+        answerBasedOnDeepAnalysis(analysis) {
+            if (analysis.topic === 'apple_products') {
+                return `🍎 **بناءً على سؤالك عن منتجات أبل:**\n\nلدينا تشكيلة ممتازة من أجهزة أبل:\n\n${productsDatabase.apple.slice(0, 3).map(p => 
+                    `• **${p.name}** - ${p.price.toLocaleString()} د.ع\n  ${p.description}`
+                ).join('\n\n')}\n\n💡 **للمزيد من التفاصيل عن منتج محدد:** اكتب اسمه كاملاً\n🔍 **مثال:** "مواصفات ايفون 15 برو" أو "سعر ساعة أبل 9"`;
+            }
+            
+            if (analysis.topic === 'samsung_products') {
+                return `📱 **بناءً على سؤالك عن سامسونج:**\n\nأحدث أجهزة سامسونج المتاحة:\n\n${productsDatabase.samsung.slice(0, 3).map(p => 
+                    `• **${p.name}** - ${p.price.toLocaleString()} د.ع\n  ${p.description}`
+                ).join('\n\n')}\n\n🌟 **نصيحة:** أجهزة سامسونج مثالية لمحبي:\n• التخصيص والتحكم\n• الشاشات الكبيرة\n• الكاميرات المتعددة\n• البطاريات القوية`;
+            }
+            
+            if (analysis.topic === 'delivery') {
+                return `🚚 **تساؤلك يبدو عن التوصيل:**\n\n✅ **نعم، نوفر خدمة توصيل شاملة!**\n\n📦 **الخيارات المتاحة:**\n1. داخل بغداد: مجاني خلال 24 ساعة\n2. للمحافظات: 2-3 أيام (15,000 د.ع)\n3. توصيل عاجل: متاح برسوم إضافية\n\n💡 **للتوصيل السريع:**\n• أكمل بياناتك بدقة\n• كن متاحاً للاتصال\n• استخدم خيار الدفع عند الاستلام\n\n📞 **لمتابعة التوصيل:** 0771 753 8315`;
+            }
+            
+            return this.generateHelpfulResponse(''); // رجوع للرد المساعد
+        },
+
+        generateHelpfulResponse(originalMessage) {
+            const helpfulResponses = [
+                `🤔 **أحتاج إلى توضيح أكثر لسؤالك.**\n\n💡 **جرب إحدى هذه الصيغ:**\n• "عندكم ايفون 15 برو؟"\n• "وش أسعار الساعات الذكية؟"\n• "وين عنوان المتجر؟"\n• "مين صاحب الموقع؟"`,
+                
+                `🔍 **لم أتمكن من فهم سؤالك بالكامل.**\n\n🎯 **جرب تقسيم سؤالك:**\n1. اذكر المنتج (مثال: ايفون 15)\n2. اذكر ما تريد معرفته (مثال: سعر، مواصفات)\n3. اطرح سؤالاً محدداً\n\n**مثال:** "كم سعر ايفون 15 وما مواصفاته؟"`,
+                
+                `💭 **سؤالك يحتاج إلى مزيد من التفصيل.**\n\n✨ **مجالات استفساري:**\n• 🛍️ **المنتجات والأسعار**\n• 👨‍💻 **عن المطور والمتجر**\n• 🚚 **التوصيل والشحن**\n• 🛡️ **الضمان والاستبدال**\n• 💳 **طرق الدفع**\n\n🔍 **اختر مجالاً واكتب سؤالك:**`,
+                
+                `🌟 **لأسئلة أكثر دقة، جرب:**\n\n1️⃣ **للمنتجات:** "عرض هواتف سامسونج" أو "أجهزة الألعاب المتاحة"\n2️⃣ **للأسعار:** "كم سعر ايفون 15 برو ماكس؟"\n3️⃣ **للتوصيل:** "هل يوصل للنجف؟ وكم المدة؟"\n4️⃣ **عن المطور:** "من هو مهندس الموقع؟"`,
+                
+                `📚 **للمساعدة في صياغة سؤالك:**\n\n**بدلاً من:** "وش في عندكم؟"\n**جرب:** "عندكم هواتف ابل حديثة؟"\n\n**بدلاً من:** "شنو الأسعار؟"\n**جرب:** "كم سعر ايفون 15 وساعة أبل 9؟"\n\n**بدلاً من:** "وينكم؟"\n**جرب:** "وين عنوان المتجر في بغداد؟"`
+            ];
+            
+            let response = helpfulResponses[Math.floor(Math.random() * helpfulResponses.length)];
+            
+            // إذا كان هناك جزء مفهوم من الرسالة، أضفه
+            const understoodParts = this.extractUnderstoodParts(originalMessage);
+            if (understoodParts.length > 0) {
+                response += `\n\n🔍 **لاحظت في سؤالك:** ${understoodParts.join('، ')}\n💡 **هل تريد معلومات أكثر عن هذا؟**`;
+            }
+            
+            return response;
+        },
+
+        extractUnderstoodParts(message) {
+            const understood = [];
+            const words = message.toLowerCase().split(' ');
+            
+            const knownTerms = {
+                'ايفون': 'منتجات أبل',
+                'سامسونج': 'منتجات سامسونج',
+                'بلايستيشن': 'أجهزة الألعاب',
+                'سعر': 'الأسعار',
+                'توصيل': 'خدمة التوصيل',
+                'ضمان': 'الضمان والكفالة',
+                'دفع': 'طرق الدفع',
+                'متجر': 'معلومات المتجر',
+                'مطور': 'المطور والمبرمج'
+            };
+            
+            for (const [term, meaning] of Object.entries(knownTerms)) {
+                if (message.includes(term)) {
+                    understood.push(meaning);
+                }
+            }
+            
+            return understood;
         }
-    </script>
-</body>
-</html>
+    };
+    
+    // إظهار رسالة ترحيبية ذكية
+    setTimeout(() => {
+        if (mousaAssistant) {
+            const welcomeMessage = mousaAssistant.generateGreetingWithSuggestions();
+            addBotMessage(welcomeMessage, 'bot');
+        }
+    }, 1000);
+}
+
+// باقي دوال البوت (setupBotEvents, toggleBotChat, botSendMessage, إلخ)
+// ... [الكود المتبقي كما هو]
