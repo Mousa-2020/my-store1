@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض خاص | متجر موسى للإلكترونيات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(41, 196, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 20, 138, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* Floating Tech Elements */
+        .floating-tech {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .tech-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .tech-2 { top: 20%; right: 15%; animation-delay: 1s; }
+        .tech-3 { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .tech-4 { bottom: 15%; right: 10%; animation-delay: 3s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        /* Header */
+        .header {
+            margin-bottom: 60px;
+            animation: fadeDown 1.5s ease-out;
+        }
+        
+        .store-logo {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: #4cc9f0;
+            text-shadow: 0 0 30px rgba(76, 201, 240, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(76, 201, 240, 0.5); }
+            to { text-shadow: 0 0 40px rgba(76, 201, 240, 0.8), 0 0 60px rgba(76, 201, 240, 0.6); }
+        }
+        
+        .main-title {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #4cc9f0, #ff4da6, #f0ff00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+        
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+            animation: fadeUp 1.8s ease-out;
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4cc9f0, #ff4da6);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .product-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .product-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .phone { color: #4cc9f0; }
+        .laptop { color: #ff4da6; }
+        .gaming { color: #f0ff00; }
+        .watch { color: #72ff7d; }
+        
+        .product-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .product-desc {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .product-price {
+            color: #72ff7d;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        /* Features */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 50px 0;
+            animation: fadeUp 2s ease-out;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature i {
+            color: #4cc9f0;
+            font-size: 1.5rem;
+        }
+        
+        /* Enter Button */
+        .enter-btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #4cc9f0, #ff4da6);
+            color: white;
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 50px;
+            text-decoration: none;
+            margin: 40px 0 60px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            animation: pulseBtn 2s ease-in-out infinite;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(76, 201, 240, 0.4);
+        }
+        
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s;
+        }
+        
+        .enter-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 15px 40px rgba(76, 201, 240, 0.6);
+        }
+        
+        .enter-btn:hover::before {
+            left: 100%;
+        }
+        
+        @keyframes pulseBtn {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(76, 201, 240, 0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 15px 40px rgba(76, 201, 240, 0.6); }
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1rem;
+            opacity: 0.7;
+            animation: fadeUp 2.2s ease-out;
+        }
+        
+        /* Animations */
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title { font-size: 2.5rem; }
+            .subtitle { font-size: 1.1rem; }
+            .products-grid { grid-template-columns: 1fr; }
+            .features { flex-direction: column; gap: 20px; }
+            .feature { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation"></div>
+    
+    <!-- Floating Tech Icons -->
+    <div class="floating-tech tech-1">📱</div>
+    <div class="floating-tech tech-2">💻</div>
+    <div class="floating-tech tech-3">🎮</div>
+    <div class="floating-tech tech-4">⌚</div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header">
+            <div class="store-logo">🛒</div>
+            <h1 class="main-title">موسى للإلكترونيات</h1>
+            <p class="subtitle">
+                استكشف عالم التكنولوجيا بأفضل الأسعار. أحدث الهواتف، أجهزة اللابتوب، أجهزة الألعاب والإكسسوارات الذكية مع ضمان الفحص المجاني والتوصيل السريع في بغداد.
+            </p>
+        </div>
+        
+        <!-- Products Showcase -->
+        <div class="products-grid">
+            <div class="product-card">
+                <span class="product-icon phone">📱</span>
+                <h3 class="product-name">أحدث الهواتف</h3>
+                <p class="product-desc">آيفون 15 برو، سامسونج جالكسي S24، هواتف ذكية بكفالة أصلية</p>
+                <div class="product-price">من 1,250,000 د.ع</div>
+            </div>
+            
+            <div class="product-card">
+                <span class="product-icon laptop">💻</span>
+                <h3 class="product-name">لابتوبات</h3>
+                <p class="product-desc">ماك بوك برو، سامسونج بوك، أجهزة قوية للعمل والترفيه</p>
+                <div class="product-price">من 1,850,000 د.ع</div>
+            </div>
+            
+            <div class="product-card">
+                <span class="product-icon gaming">🎮</span>
+                <h3 class="product-name">أجهزة ألعاب</h3>
+                <p class="product-desc">بلايستيشن 5، إكس بوكس، أجهزة جيمينغ مع أفضل العروض</p>
+                <div class="product-price">من 780,000 د.ع</div>
+            </div>
+            
+            <div class="product-card">
+                <span class="product-icon watch">⌚</span>
+                <h3 class="product-name">إكسسوارات ذكية</h3>
+                <p class="product-desc">ساعات ذكية، سماعات لاسلكية، شواحن سريعة وأكثر</p>
+                <div class="product-price">من 55,000 د.ع</div>
+            </div>
+        </div>
+        
+        <!-- Features -->
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-search-dollar"></i>
+                <span>فحص مجاني قبل الدفع</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shipping-fast"></i>
+                <span>توصيل سريع داخل بغداد</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-exchange-alt"></i>
+                <span>استبدال خلال 7 أيام</span>
+            </div>
+        </div>
+        
+        <!-- Enter Button -->
+        <a href="https://mousa-store.vercel.app/" class="enter-btn">
+            <i class="fas fa-store"></i> ادخل إلى المتجر الرئيسي
+        </a>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>📍 الكرادة، بغداد | للتواصل عبر واتساب | جميع المنتجات أصلية وضمان</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">هذا العرض التقديمي يظهر أهم مزايا متجر موسى للإلكترونيات</p>
+        </div>
+    </div>
+    
+    <!-- Simple Animation Script -->
+    <script>
+        // Add random glow effect to product cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                // Random delay for initial animation
+                card.style.animationDelay = Math.random() * 0.5 + 's';
+            });
+            
+            // Auto-redirect after 30 seconds (optional)
+            setTimeout(() => {
+                if (confirm('انتهى العرض التقديمي. هل تريد الدخول إلى المتجر؟')) {
+                    window.location.href = 'https://mousa-store.vercel.app/';
+                }
+            }, 30000);
+        });
+    </script>
+</body>
+</html>
